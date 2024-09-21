@@ -9,17 +9,16 @@ const Login = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
   const [loginError, setLoginError] = useState(null);
  const navigate = useNavigate()
- const {setCurrentUser} = useContext(AuthContext)
 
   const onSubmit = async (data) => {
     const { email, password } = data;
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      setCurrentUser(userCredential.email)
       // console.log('Logged in:', userCredential.user);
-      navigate('/');
       console.log(userCredential.user.email)
-
+      navigate('/');
+      
+      
 
       
   } catch (error) {

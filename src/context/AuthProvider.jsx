@@ -24,7 +24,8 @@ function AuthProvider({children}) {
 
     const logout = async () => {
       try {
-          await signOut(auth);
+          await signOut(auth)
+          setCurrentUser(null)
           console.log('User signed out');
       } catch (error) {
           console.error('Logout error:', error.message);

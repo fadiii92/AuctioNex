@@ -6,12 +6,13 @@ function Home() {
   const {currentUser} = useContext(AuthContext)
   return (
     <div>
-      <h2>Home Page</h2>
-      <p>Your're curretly logged in as : {currentUser.email}</p>
-
-
-
-    </div>
+    <h1>Welcome to AuctioNex</h1>
+    {currentUser ? (
+      <p>You are logged in as: {currentUser.email}</p>
+    ) : (
+      <p>Please log in to access your account.</p>
+    )}
+  </div>
   )
 }
 
