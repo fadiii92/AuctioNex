@@ -2,6 +2,8 @@
 import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} from 'react-router-dom'
 import { Login, Signup, Home } from './Components'
 import Layout from './Layout'
+import PrivateRoute from './context/PrivateRoute'
+import AuthProvider from './context/AuthProvider'
 
 function App() {
   const router = createBrowserRouter(
@@ -9,7 +11,7 @@ function App() {
         <>
 
         <Route path='/' element= {<Layout />} >
-              <Route index element = {<Home />} />
+              <Route index element = {<PrivateRoute><Home /></PrivateRoute>} />
 
         </Route>
           <Route path='login' element = {<Login />} />
@@ -21,11 +23,11 @@ function App() {
 
   return (
    <>
-        <RouterProvider router = {router} >
+ 
+      <RouterProvider router={router} />
+    
 
 
-
-        </RouterProvider>
    </>
   )
 }
