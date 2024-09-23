@@ -3,7 +3,8 @@ import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} fr
 import { Login, Signup, Home, MyItems, ListItems } from './Components'
 import Layout from './Layout'
 import PrivateRoute from './context/PrivateRoute'
-
+import { Provider } from 'react-redux'
+import store from './redux/store'
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -24,9 +25,10 @@ function App() {
 
   return (
    <>
- 
+      <Provider store = {store}>
       <RouterProvider router={router} />
     
+      </Provider>
 
 
    </>

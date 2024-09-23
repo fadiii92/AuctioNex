@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   return (
@@ -7,8 +7,10 @@ const Header = () => {
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo with styled text */}
         <div className="text-3xl font-bold">
+          <NavLink to = '/'>
           <span className="text-white">Auctio</span>
           <span className="text-yellow-400">Nex</span>
+          </NavLink>
         </div>
 
         {/* Hamburger menu for mobile */}
@@ -56,7 +58,7 @@ const Header = () => {
             My Items
           </NavLink>
 
-          <button className="text-red-500 hover:text-red-300 font-semibold">
+          <button className="text-red-500 hover:text-red-300 font-semibold" >
             Logout
           </button>
         </nav>

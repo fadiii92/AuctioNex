@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {postItem} from '../redux/itemActions'
+import { AuthContext } from '../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
-// Zod schema for validation
 const auctionSchema = z.object({
   itemTitle: z.string().min(3, 'Item title must be at least 3 characters long'),
   description: z.string().min(10, 'Description must be at least 10 characters long'),
@@ -17,14 +19,19 @@ const AuctionForm = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(auctionSchema),
   });
+  const {currentUser} = useContext(AuthContext)
+  const navigate = useNavigate()
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit =async (data) => {
+
+    
+
+  await  postItem({itemOwner: currentUser.uid, ...data})
+    // navigate('/')
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {/* Item Title */}
       <div>
         <label>Item Title</label>
         <input
@@ -35,7 +42,6 @@ const AuctionForm = () => {
         {errors.itemTitle && <p className="text-red-500">{errors.itemTitle.message}</p>}
       </div>
 
-      {/* Description */}
       <div>
         <label>Description</label>
         <textarea
@@ -45,7 +51,6 @@ const AuctionForm = () => {
         {errors.description && <p className="text-red-500">{errors.description.message}</p>}
       </div>
 
-      {/* Starting Bid */}
       <div>
         <label>Starting Bid</label>
         <input
@@ -56,7 +61,6 @@ const AuctionForm = () => {
         {errors.startingBid && <p className="text-red-500">{errors.startingBid.message}</p>}
       </div>
 
-      {/* Auction Duration */}
       <div>
         <label>Auction Duration</label>
         <input
@@ -67,7 +71,6 @@ const AuctionForm = () => {
         {errors.auctionDuration && <p className="text-red-500">{errors.auctionDuration.message}</p>}
       </div>
 
-      {/* Category */}
       <div>
         <label>Category</label>
         <select {...register('category')} className="border p-2 rounded w-full">
@@ -81,7 +84,6 @@ const AuctionForm = () => {
         {errors.category && <p className="text-red-500">{errors.category.message}</p>}
       </div>
 
-      {/* Images */}
       <div>
         <label>Images</label>
         <input
@@ -93,9 +95,8 @@ const AuctionForm = () => {
         {errors.images && <p className="text-red-500">{errors.images.message}</p>}
       </div>
 
-      {/* Submit Button */}
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-        Submit Auction
+      <button type="submit" disabled= {isSubmitting} className="bg-blue-500 text-white p-2 rounded">
+       {isSubmitting ? 'Loading' : "Submit Auction"}
       </button>
     </form>
   );
