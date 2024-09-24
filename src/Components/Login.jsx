@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { auth } from '../firebaseConfig'; 
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthProvider';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
@@ -64,6 +65,16 @@ const Login = () => {
             {isSubmitting ? '....Loading' : 'Submit'}
           </button>
         </form>
+
+        <div className="mt-4 text-center">
+          <p className="text-gray-600">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-blue-500 hover:underline">
+              Register here
+            </Link>
+          </p>
+        </div>
+
       </div>
     </div>
   );

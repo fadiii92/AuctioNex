@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthProvider';
 
 const Header = () => {
+  const {logout} = useContext(AuthContext)
   return (
     <header className="bg-blue-500 shadow-md p-4">
       <div className="container mx-auto flex justify-between items-center">
@@ -58,7 +60,7 @@ const Header = () => {
             My Items
           </NavLink>
 
-          <button className="text-red-500 hover:text-red-300 font-semibold" >
+          <button className="text-red-500 hover:text-red-300 font-semibold" onClick={logout}>
             Logout
           </button>
         </nav>

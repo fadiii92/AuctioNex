@@ -27,7 +27,7 @@ const AuctionForm = () => {
     
 
   await  postItem({itemOwner: currentUser.uid, ...data})
-    // navigate('/')
+    navigate('/')
   };
 
   return (
@@ -96,7 +96,7 @@ const AuctionForm = () => {
       </div>
 
       <button type="submit" disabled= {isSubmitting} className="bg-blue-500 text-white p-2 rounded">
-       {isSubmitting ? 'Loading' : "Submit Auction"}
+       {isSubmitting ? 'Loading...' : "Submit Auction"}
       </button>
     </form>
   );

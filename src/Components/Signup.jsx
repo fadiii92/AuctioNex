@@ -4,8 +4,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../firebaseConfig'; 
+import { auth } from '../firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { Link } from 'react-router-dom';
 
 const formSchema = z.object({
   name: z.string().nonempty("Name is required"),
@@ -36,11 +37,11 @@ function Signup() {
     try {
       const { user } = await createUserWithEmailAndPassword(auth, data.email, data.password);
 
-      
+
       await axios.post('https://auctionex-62baa-default-rtdb.firebaseio.com/Users.json', {
         ...data,
-        uid: user.uid, 
-        confirmPass: null 
+        uid: user.uid,
+        confirmPass: null
       });
 
       console.log('User registered and details saved successfully');
@@ -109,14 +110,23 @@ function Signup() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full p-3 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-colors ${
-              isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={`w-full p-3 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-colors ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
           >
             {isSubmitting ? 'Loading....' : 'Register'}
           </button>
-          
+
         </form>
+
+        <div className="mt-4 text-center">
+          <p className="text-gray-600">
+            Already have an account?{' '}
+            <Link to="/login" className="text-blue-500 hover:underline">
+              Login here
+            </Link>
+          </p>
+        </div>
+
       </div>
     </div>
   );
