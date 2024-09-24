@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {postItem} from '../redux/itemActions'
+import { postItem } from '../redux/itemActions'
 import { AuthContext } from '../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,16 +19,41 @@ const AuctionForm = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(auctionSchema),
   });
-  const {currentUser} = useContext(AuthContext)
+  const { currentUser } = useContext(AuthContext)
   const navigate = useNavigate()
+  const [error, setError] = useState('');
 
-  const onSubmit =async (data) => {
+  const onSubmit = async (data) => {
 
-    
 
-  await  postItem({itemOwner: currentUser.uid, ...data})
+
+    await postItem({ itemOwner: currentUser.uid, ...data })
     navigate('/')
   };
+
+  const validateImageFiles = (event) => {
+    const files = event.target.files;
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const invalidFiles = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (!validImageTypes.includes(file.type)) {
+        invalidFiles.push(file.name);
+      }
+    }
+
+    if (invalidFiles.length > 0) {
+      setError(`Invalid file types: ${invalidFiles.join(', ')}`);
+      event.target.value = '';
+      return false;
+    }
+
+    setError('');
+    return true;
+  };
+
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -91,12 +116,14 @@ const AuctionForm = () => {
           {...register('images')}
           multiple
           className="border p-2 rounded w-full"
+          onChange={validateImageFiles}
         />
+        {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
         {errors.images && <p className="text-red-500">{errors.images.message}</p>}
       </div>
 
-      <button type="submit" disabled= {isSubmitting} className="bg-blue-500 text-white p-2 rounded">
-       {isSubmitting ? 'Loading...' : "Submit Auction"}
+      <button type="submit" disabled={isSubmitting} className="bg-blue-500 text-white p-2 rounded">
+        {isSubmitting ? 'Loading...' : "Submit Auction"}
       </button>
     </form>
   );
