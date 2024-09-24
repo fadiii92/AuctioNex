@@ -1,6 +1,6 @@
 
 import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} from 'react-router-dom'
-import { Login, Signup, Home, MyItems, ListItems } from './Components'
+import { Login, Signup, Home, MyItems, ListItems, NotFoundPage } from './Components'
 import Layout from './Layout'
 import PrivateRoute from './context/PrivateRoute'
 import { Provider } from 'react-redux'
@@ -18,6 +18,7 @@ function App() {
         </Route>
           <Route path='login' element = {<Login />} />
           <Route path='register' element = {<Signup />} />
+          <Route path='*' element = {<NotFoundPage />} />
         
         </>
     )

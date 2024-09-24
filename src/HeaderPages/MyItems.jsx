@@ -1,12 +1,20 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { AuthContext } from '../context/AuthProvider';
 import ParentCard from '../miniComponents/ParentCard';
 import AuctionCard from '../miniComponents/AuctionCard';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { retrieveItems } from "../redux/itemActions"
+
 
 function MyItems() {
   const {currentUser} = useContext(AuthContext)
   const allItems = useSelector((state) => state.auctionDataReducer.auctionItems)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(retrieveItems())
+  }, [])
+
   return (
     <ParentCard>
     {Object.values(allItems).map((category) => {

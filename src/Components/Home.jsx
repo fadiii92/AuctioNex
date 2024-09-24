@@ -16,7 +16,7 @@ function Home() {
   }, [])
 
   const allItems = useSelector((state) => state.auctionDataReducer.auctionItems)
-   console.log(allItems)
+  //  console.log(allItems)
   //  Object.values(allItems).map(curr=> console.log(curr))
 
 
@@ -24,13 +24,12 @@ function Home() {
 
 
   return (
-    <div>
+    <>
+
       <h1>Welcome to AuctioNex</h1>
-      {currentUser ? (
+      {currentUser && (
         <p>You are logged in as: {currentUser.email}</p>
-      ) : (
-        <p>Please log in to access your account.</p>
-      )}
+      ) }
 
 
 
@@ -51,7 +50,7 @@ function Home() {
       </ParentCard>
 
 
-    </div>
+    </>
   )
 }
 
