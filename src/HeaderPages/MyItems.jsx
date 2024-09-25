@@ -4,6 +4,7 @@ import ParentCard from '../miniComponents/ParentCard';
 import AuctionCard from '../miniComponents/AuctionCard';
 import { useSelector, useDispatch } from 'react-redux';
 import { retrieveItems } from "../redux/itemActions"
+import { Link } from 'react-router-dom';
 
 
 function MyItems() {
@@ -17,19 +18,18 @@ function MyItems() {
 
   return (
     <ParentCard>
-    {Object.values(allItems).map((category) => {
+      {Object.values(allItems).map((category) => {
       return category
         .filter((item) => item.itemOwner === currentUser.uid)
         .map((item) => (
+          <Link to = {`/myItems/${item.key}`}>
           <AuctionCard
-            key={item.id} 
-            category={item.category}
-            itemOwner={item.itemOwner}
+            key={item.key} 
             itemTitle={item.itemTitle}
-            description={item.description}  
             startingBid={item.startingBid}
-            image={item.imgUrls[0]}
-          />
+            images={item.imgUrls}
+            />
+            </Link>
         ));
     })}
   </ParentCard>

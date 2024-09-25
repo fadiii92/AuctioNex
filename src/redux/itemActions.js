@@ -43,7 +43,7 @@ export const retrieveItems = () => {
         const allitems = allItems[ceta]
         const items = []
         for(let item in allitems){
-            // console.log(allitems[item])
+            // console.log(item)
             items.push({key: item ,...allitems[item]})
         }
         formateditems[ceta] = items

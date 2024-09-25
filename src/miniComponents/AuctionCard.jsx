@@ -1,10 +1,17 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const AuctionCard = ({ category, itemOwner, itemTitle, description, startingBid, image }) => {
+const AuctionCard = ({id, itemTitle, startingBid, images }) => {
   return (
-    <div className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-white hover:shadow-2xl transition-shadow duration-300 ease-in-out transform hover:scale-105">
+    
+
+    <div
+     className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-white hover:shadow-2xl transition-shadow duration-300 ease-in-out transform hover:scale-105"
+    //  onClick={handleItemClick()}
+     >
+      
       {/* Image */}
-      <img className="w-full h-48 object-cover" src={image} alt={itemTitle} />
+      <img className="w-full h-48 object-cover" src={images[0]} alt={itemTitle} />
 
       {/* Card Content */}
       <div className="p-4">
@@ -19,6 +26,7 @@ const AuctionCard = ({ category, itemOwner, itemTitle, description, startingBid,
         </p>
       </div>
     </div>
+    // </Link>
   );
 };
 

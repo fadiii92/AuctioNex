@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { retrieveItems } from "../redux/itemActions"
 import ParentCard from "../miniComponents/ParentCard"
 import AuctionCard from "../miniComponents/AuctionCard"
-
-
+import { Link } from "react-router-dom"
 
 function Home() {
   const { currentUser } = useContext(AuthContext)
@@ -16,7 +15,7 @@ function Home() {
   }, [])
 
   const allItems = useSelector((state) => state.auctionDataReducer.auctionItems)
-  //  console.log(allItems)
+  //  console.log(Object.values(allItems))
   //  Object.values(allItems).map(curr=> console.log(curr))
 
 
@@ -33,21 +32,27 @@ function Home() {
 
 
 
-      <ParentCard>
-        {Object.values(allItems).map((category) => {
-          return category.map((item) => (
-            <AuctionCard
-              key={item.id} 
-              category={item.category}
-              itemOwner={item.itemOwner}
-              itemTitle={item.itemTitle}
-              description={item.description}  
-              startingBid={item.startingBid}
-              image={item.imgUrls[0]}
+<ParentCard>
+    {Object.values(allItems).map((category) => {
+      return category
+        .filter((item) => item.itemOwner !== currentUser.uid)
+        .map((item) => (
+          <Link to={`/allItems/${item.key}`}>
+
+          <AuctionCard
+            key={item.key} 
+            id = {item.key}
+            category={item.category}
+            itemOwner={item.itemOwner}
+            itemTitle={item.itemTitle}
+            description={item.description}  
+            startingBid={item.startingBid}
+            images={item.imgUrls}
             />
-          ));
-        })}
-      </ParentCard>
+            </Link>
+        ));
+    })}
+  </ParentCard>
 
 
     </>
