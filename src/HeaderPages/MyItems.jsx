@@ -9,13 +9,13 @@ import { Link } from 'react-router-dom';
 
 function MyItems() {
   const {currentUser} = useContext(AuthContext)
-  const allItems = useSelector((state) => state.auctionDataReducer.auctionItems)
   const dispatch = useDispatch()
-
+  
   useEffect(() => {
     dispatch(retrieveItems())
   }, [])
-
+  
+  const allItems = useSelector((state) => state.auctionDataReducer.auctionItems)
   return (
     <ParentCard>
       {Object.values(allItems).map((category) => {

@@ -2,10 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const auctionDataSlice = createSlice({
     name: 'auctionData',
-    initialState: {auctionItems: {}},
+    initialState: {auctionItems: {},bidData:{}},
     reducers: {
         setItems: (state, action)=>{
             state.auctionItems = action.payload
+        },
+        setBids : (state, action) =>{
+            state.bidData = action.payload
         }
 
     }

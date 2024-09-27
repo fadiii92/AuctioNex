@@ -1,18 +1,17 @@
 import axios from 'axios'
-import {auctionActions} from './slices'
+import { auctionActions } from './slices'
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 
 
 const baseurl = 'https://auctionex-62baa-default-rtdb.firebaseio.com'
 
-export const postItem =async (data) => {
+export const postItem = async (data) => {
     const storage = getStorage()
     const imgUrls = []
     const imageFiles = data.images
-    try{
-        for(let i=0 ; i<imageFiles.length; i++)
-        {
+    try {
+        for (let i = 0; i < imageFiles.length; i++) {
             const imageFile = imageFiles[i]
             const storageRef = ref(storage, `images/${imageFile.name}`)
             const snapshot = await uploadBytes(storageRef, imageFile)
@@ -20,39 +19,76 @@ export const postItem =async (data) => {
             imgUrls.push(downloadURL);
         }
         console.log(imgUrls)
-        const updatedData = {...data, imgUrls}
-        await axios.post(`https://auctionex-62baa-default-rtdb.firebaseio.com/auctionitems/${(data.category).toLowerCase()}.json`, {...data,imgUrls})
+        const updatedData = { ...data, imgUrls }
+        await axios.post(`https://auctionex-62baa-default-rtdb.firebaseio.com/auctionitems/${(data.category).toLowerCase()}.json`, { ...data, imgUrls })
         console.log('Data added', updatedData)
     }
-    catch(error){
+    catch (error) {
         alert('something went wrong', error)
     }
 }
 
 export const retrieveItems = () => {
-    return async (dispatch) =>{
+    return async (dispatch) => {
         let allItems
         await axios.get(`${baseurl}/auctionitems.json`)
-       .then(resp => allItems = resp.data) 
-       .catch(err=>console.log(err))
+            .then(resp => allItems = resp.data)
+            .catch(err => console.log(err))
 
-    //    console.log(allItems)
-       let formateditems = {}
+        //    console.log(allItems)
+        let formateditems = {}
 
-       for(let ceta in allItems){
-        const allitems = allItems[ceta]
-        const items = []
-        for(let item in allitems){
-            // console.log(item)
-            items.push({key: item ,...allitems[item]})
+        for (let ceta in allItems) {
+            const allitems = allItems[ceta]
+            const items = []
+            for (let item in allitems) {
+                // console.log(item)
+                items.push({ key: item, ...allitems[item] })
+            }
+            formateditems[ceta] = items
         }
-        formateditems[ceta] = items
-       }
-    //    console.log(formateditems)
+        //    console.log(formateditems)
 
-       dispatch(auctionActions.setItems(formateditems))
+        dispatch(auctionActions.setItems(formateditems))
 
 
     }
 
 }
+
+export const placeBid = async (bid, item, bidder, cetagory) => {
+    try {
+        // await axios.post(`${baseurl}/bids/${item}.json`, { Bidder: bidder, Amount: bid, item })
+        console.log(cetagory)
+        await axios.put(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/startingBid.json`, bid)
+        .then(resp=>console.log('Bid Places'))
+        .catch(err =>console.log('Somthing went wrong. try agin placing the bid'))
+
+
+    }
+    catch (err) {
+        alert('something went wrong', err)
+    }
+}
+
+export const deleteItem =async (id, cetagory) =>{
+    console.log(id, cetagory)
+    await axios.delete(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${id}.json`)
+    .then(resp=> console.log('deleted'))
+    .catch(err => console.log('could not deleet', err))
+}
+
+// export const retriveBids = ()=>{
+//     return async (dispatch) => {
+//         let allBids
+//         await axios.get(`${baseurl}/bids.json`)
+//         .then(resp => allBids = resp.data)
+//         .catch(err=>alert('Something went wrong while getting Bids'))
+//         console.log(allBids) 
+
+
+
+//     }
+// }
+
+
