@@ -7,38 +7,35 @@ import { AuthContext } from '../context/AuthProvider';
 function ItemDetails() {
   const dispatch = useDispatch();
   const { itemId } = useParams();
-  const { pathname } = useLocation()
-  const { currentUser } = useContext(AuthContext)
-  const navigate = useNavigate()
+  const { pathname } = useLocation();
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    dispatch(retrieveItems());
-    // dispatch(retriveBids())
-  }, [dispatch]);
+  const [loading, setLoading] = useState(true);
+  const [mainImage, setMainImage] = useState('');
+  const [bid, setBid] = useState('');
+  const [currentBid, setCurrentBid] = useState(0);
+  const [bidError, setBidError] = useState('');
+  const [bidPlaceMsg, setBidPlaceMsg] = useState('');
+  const [category, setCategory] = useState('');
 
-  const allItems = useSelector((state) => state.auctionDataReducer.auctionItems);
-  const currentItem = Object.values(allItems)
+  const { auctionItems } = useSelector((state) => state.auctionDataReducer);
+
+  const currentItem = Object.values(auctionItems)
     .flatMap((category) => category)
     .find((item) => item.key === itemId);
 
-  // console.log(currentItem)
-
-  const [mainImage, setMainImage] = useState(currentItem?.imgUrls ? currentItem.imgUrls[0] : '');
-
-
-  //Handling bid
-  const [bid, setBid] = useState('');
-  const [currentBid, setCurrentBid] = useState(currentItem ? currentItem.startingBid : 0);
-  const [bidError, setBidError] = useState('');
-  const [bidPlaceMsg, setBidPlaceMsg] = useState('')
-  const [cetagory, setCetagory] = useState(currentItem ? currentItem.category : 0)
+  useEffect(() => {
+    dispatch(retrieveItems()).then(() => {
+      setLoading(false);
+    });
+  }, [dispatch, itemId, currentItem?.category, currentItem?.recendBids]);
 
   useEffect(() => {
     if (currentItem) {
-      console.log(currentItem)
       setCurrentBid(currentItem.startingBid);
       setMainImage(currentItem.imgUrls ? currentItem.imgUrls[0] : '');
-      setCetagory(currentItem?.category)
+      setCategory(currentItem.category);
     }
   }, [currentItem]);
 
@@ -48,31 +45,46 @@ function ItemDetails() {
       setCurrentBid(bidValue);
       setBid('');
       setBidError('');
-      setBidPlaceMsg('Bid Placed successfully')
-      await placeBid(bidValue, itemId, currentUser.email, cetagory)
-
+      setBidPlaceMsg('Bid Placed successfully');
+      await placeBid(bidValue, itemId, currentUser.email, category);
     } else {
       setBidError('Your bid must be higher than the current bid.');
-      setBidPlaceMsg('')
+      setBidPlaceMsg('');
     }
   };
 
-  const handleDelete = async ()=>{
-    try{
-      await deleteItem(itemId, cetagory)
-      alert('Deleted Successfuly')
-      navigate('/myitems')
+  const handleDelete = async () => {
+    try {
+      await deleteItem(itemId, category);
+      alert('Deleted Successfully');
+      navigate('/myitems');
+    } catch (err) {
+      alert('Something went wrong. Could not delete');
     }
-    catch(err){
-      alert('Something Went wrong. Could not delete')
-    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <p className="text-lg font-semibold text-gray-600">Loading...</p>
+      </div>
+    );
   }
+
+  if (!currentItem) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <p className="text-lg font-semibold text-red-600">Item not found</p>
+      </div>
+    );
+  }
+
 
   return (
     <div className="container mx-auto py-10 min-h-screen">
-      <div className="flex flex-col lg:flex-row items-center lg:items-start h-full">
+      <div className="flex flex-col lg:flex-row items-center lg:items-stretch h-full">
         {/* Main image and thumbnails */}
-        <div className="w-full lg:w-1/2 bg-gray-100 rounded-lg overflow-hidden shadow-lg h-full min-h-[500px]">
+        <div className="w-full lg:w-1/2 bg-gray-100 rounded-lg overflow-hidden shadow-lg h-full flex flex-col justify-between">
           {/* Main image */}
           {mainImage && (
             <div className="h-[500px] w-full flex justify-center items-center bg-white">
@@ -86,7 +98,7 @@ function ItemDetails() {
 
           {/* Thumbnails */}
           {currentItem?.imgUrls && currentItem.imgUrls.length > 1 && (
-            <div className="flex justify-center mt-4 space-x-2">
+            <div className="flex justify-center mt-4 space-x-2 p-2 bg-gray-200">
               {currentItem.imgUrls.slice(0, 3).map((url, index) => (
                 <img
                   key={index}
@@ -102,72 +114,108 @@ function ItemDetails() {
         </div>
 
         {/* Item details */}
-        <div className="w-full lg:w-1/2 lg:ml-8 mt-6 lg:mt-0 bg-white p-6 rounded-lg shadow-lg h-full min-h-[500px]">
-          <h2 className="text-3xl font-bold text-gray-900 mb-10">
-            {currentItem?.itemTitle}
-          </h2>
+        <div className="w-full lg:w-1/2 lg:ml-8 mt-6 lg:mt-0 bg-white p-6 rounded-lg shadow-lg h-full flex flex-col justify-between">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              {currentItem?.itemTitle}
+            </h2>
 
-          <p className="text-lg text-gray-500 mb-4">
-            Category: <span className="font-semibold">{currentItem?.category}</span>
-          </p>
-
-          <p className="text-gray-700 mb-8">{currentItem?.description}</p>
-
-          <div className="flex justify-between items-center mb-8">
-            <p className="text-2xl text-gray-800 font-semibold">
-              Current Bid: <span className="text-blue-600">${currentBid}</span>
+            <p className="text-lg text-gray-500 mb-4">
+              Category: <span className="font-semibold">{currentItem?.category}</span>
             </p>
-            <p className="text-sm text-gray-500">
-              Auction ends on: {new Date(currentItem?.auctionDuration).toLocaleDateString()}
-            </p>
+
+            <p className="text-gray-700 mb-8">{currentItem?.description}</p>
+
+            <div className="flex justify-between items-center mb-8">
+              <p className="text-2xl text-gray-800 font-semibold">
+                Current Bid: <span className="text-blue-600">${currentBid}</span>
+              </p>
+              <p className="text-sm text-gray-500">
+                Auction ends on: {new Date(currentItem?.auctionDuration).toLocaleDateString()}
+              </p>
+            </div>
           </div>
 
           {/* Buttons or Bid Input */}
           {pathname.includes('myItems') ? (
-            <div className="flex items-center space-x-4 mb-8">
-              <button
-                onClick={() => console.log('Edit clicked')}
-                className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all"
-              >
-                Edit
-              </button>
+  <>
+    {/* Edit and Delete Buttons for item owner */}
+    <div className="flex items-center space-x-4 mb-8">
+      <button
+        onClick={() => console.log('Edit clicked')}
+        className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all"
+      >
+        Edit
+      </button>
 
-              <button
-                onClick={handleDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
-              >
-                Delete
-              </button>
+      <button
+        onClick={handleDelete}
+        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
+      >
+        Delete
+      </button>
+    </div>
+
+    {/* Show All Bids for item owner */}
+    <h3 className="text-lg font-semibold mt-6 mb-4">All Bids</h3>
+    <div className="space-y-2">
+      {currentItem?.recendBids && Object.values(currentItem.recendBids).length > 0 ? (
+        Object.values(currentItem.recendBids).map((item, index) => (
+          <div key={index} className="bg-white border border-gray-300 p-3 rounded-md shadow-sm">
+            <p className="text-sm text-gray-700">Bidder: {item.user}</p>
+            <p className="text-sm text-gray-700">Bid: ${item.bid}</p>
+          </div>
+        ))
+      ) : (
+        <p className="text-gray-500">No bids have been placed yet.</p>
+      )}
+    </div>
+  </>
+) : (
+  <>
+    {/* Input for placing bids */}
+    <div className="flex items-center space-x-4 mb-6">
+      <input
+        type="number"
+        value={bid}
+        onChange={(e) => setBid(e.target.value)}
+        placeholder={`Bid more than $${currentBid}`}
+        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <button
+        onClick={handleBid}
+        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
+      >
+        Place Bid
+      </button>
+    </div>
+
+    {/* Messages for bid placement */}
+    {bidPlaceMsg && <p className="text-black text-sm mt-2">{bidPlaceMsg}</p>}
+    {bidError && <p className="text-red-500 text-sm mt-2">{bidError}</p>}
+
+    {/* Show Recent Bids for non-owner */}
+    <h3 className="text-lg font-semibold mt-6 mb-4">Recent Bids</h3>
+    <div className="space-y-2">
+      {currentItem?.recendBids && Object.keys(currentItem.recendBids).length > 0 ? (
+        Object.values(currentItem.recendBids)
+          .slice(-3) // Get the last 3 bids
+          .reverse() // Reverse the order of the last 3 bids
+          .map((item, index) => (
+            <div key={index} className="bg-gray-100 p-3 rounded-md">
+              <p className="text-sm text-gray-700">Bid: ${item.bid}</p>
             </div>
-          ) : (
-            <>
-              <div className="flex items-center space-x-4 mb-6">
-                <input
-                  type="number"
-                  value={bid}
-                  onChange={(e) => setBid(e.target.value)}
-                  placeholder={`Bid more than $${currentBid}`}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button
-                  onClick={handleBid}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
-                >
-                  Place Bid
-                </button>
-              </div>
+          ))
+      ) : (
+        <p className="text-gray-500">No recent bids available.</p>
+      )}
+    </div>
+  </>
+)}
 
-
-              {bidPlaceMsg && <p className="text-black text-sm mt-2">{bidPlaceMsg}</p>}
-              {/* Error Message */}
-              {bidError && <p className="text-red-500 text-sm mt-2">{bidError}</p>}
-            </>
-          )}
         </div>
       </div>
     </div>
-
-
   );
 }
 

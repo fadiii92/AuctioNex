@@ -58,9 +58,8 @@ export const retrieveItems = () => {
 
 export const placeBid = async (bid, item, bidder, cetagory) => {
     try {
-        // await axios.post(`${baseurl}/bids/${item}.json`, { Bidder: bidder, Amount: bid, item })
-        console.log(cetagory)
         await axios.put(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/startingBid.json`, bid)
+        await axios.post(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/recendBids.json`, {item: item, user:bidder, bid:bid})
         .then(resp=>console.log('Bid Places'))
         .catch(err =>console.log('Somthing went wrong. try agin placing the bid'))
 
@@ -78,14 +77,19 @@ export const deleteItem =async (id, cetagory) =>{
     .catch(err => console.log('could not deleet', err))
 }
 
-// export const retriveBids = ()=>{
+// export const retriveRecentBids = (item, cetagory)=>{
 //     return async (dispatch) => {
-//         let allBids
-//         await axios.get(`${baseurl}/bids.json`)
+//         let allBids, formatedBidsData = []
+//         await axios.get(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/recendBids.json`)
 //         .then(resp => allBids = resp.data)
 //         .catch(err=>alert('Something went wrong while getting Bids'))
-//         console.log(allBids) 
+//         // console.log(allBids) 
+        
+//         Object.values(allBids).map(item=> formatedBidsData.push(item))
 
+
+//         dispatch(auctionActions.setBids(formatedBidsData))
+        
 
 
 //     }
