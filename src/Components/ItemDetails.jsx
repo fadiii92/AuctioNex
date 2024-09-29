@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { retrieveItems, placeBid, deleteItem } from '../redux/itemActions';
@@ -63,6 +63,10 @@ function ItemDetails() {
     }
   };
 
+  const storedCurrentItem = useMemo(()=>{
+    return currentItem
+  },currentItem)
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-100">
@@ -71,7 +75,7 @@ function ItemDetails() {
     );
   }
 
-  if (!currentItem) {
+  if (!storedCurrentItem) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-100">
         <p className="text-lg font-semibold text-red-600">Item not found</p>
@@ -90,7 +94,7 @@ function ItemDetails() {
             <div className="h-[500px] w-full flex justify-center items-center bg-white">
               <img
                 src={mainImage}
-                alt={currentItem?.itemTitle}
+                alt={storedCurrentItem?.itemTitle}
                 className="object-contain w-[400px] h-[400px] max-w-full max-h-full"
               />
             </div>
@@ -117,21 +121,21 @@ function ItemDetails() {
         <div className="w-full lg:w-1/2 lg:ml-8 mt-6 lg:mt-0 bg-white p-6 rounded-lg shadow-lg h-full flex flex-col justify-between">
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {currentItem?.itemTitle}
+              {storedCurrentItem?.itemTitle}
             </h2>
 
             <p className="text-lg text-gray-500 mb-4">
-              Category: <span className="font-semibold">{currentItem?.category}</span>
+              Category: <span className="font-semibold">{storedCurrentItem?.category}</span>
             </p>
 
-            <p className="text-gray-700 mb-8">{currentItem?.description}</p>
+            <p className="text-gray-700 mb-8">{storedCurrentItem?.description}</p>
 
             <div className="flex justify-between items-center mb-8">
               <p className="text-2xl text-gray-800 font-semibold">
                 Current Bid: <span className="text-blue-600">${currentBid}</span>
               </p>
               <p className="text-sm text-gray-500">
-                Auction ends on: {new Date(currentItem?.auctionDuration).toLocaleDateString()}
+                Auction ends on: {new Date(storedCurrentItem?.auctionDuration).toLocaleDateString()}
               </p>
             </div>
           </div>
@@ -159,8 +163,8 @@ function ItemDetails() {
     {/* Show All Bids for item owner */}
     <h3 className="text-lg font-semibold mt-6 mb-4">All Bids</h3>
     <div className="space-y-2">
-      {currentItem?.recendBids && Object.values(currentItem.recendBids).length > 0 ? (
-        Object.values(currentItem.recendBids).map((item, index) => (
+      {storedCurrentItem?.recendBids && Object.values(storedCurrentItem.recendBids).length > 0 ? (
+        Object.values(storedCurrentItem.recendBids).map((item, index) => (
           <div key={index} className="bg-white border border-gray-300 p-3 rounded-md shadow-sm">
             <p className="text-sm text-gray-700">Bidder: {item.user}</p>
             <p className="text-sm text-gray-700">Bid: ${item.bid}</p>
@@ -197,8 +201,8 @@ function ItemDetails() {
     {/* Show Recent Bids for non-owner */}
     <h3 className="text-lg font-semibold mt-6 mb-4">Recent Bids</h3>
     <div className="space-y-2">
-      {currentItem?.recendBids && Object.keys(currentItem.recendBids).length > 0 ? (
-        Object.values(currentItem.recendBids)
+      {storedCurrentItem?.recendBids && Object.keys(storedCurrentItem.recendBids).length > 0 ? (
+        Object.values(storedCurrentItem.recendBids)
           .slice(-3) // Get the last 3 bids
           .reverse() // Reverse the order of the last 3 bids
           .map((item, index) => (

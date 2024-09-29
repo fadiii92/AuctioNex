@@ -47,7 +47,7 @@ export const retrieveItems = () => {
             }
             formateditems[ceta] = items
         }
-        //    console.log(formateditems)
+           console.log(formateditems.furniture)
 
         dispatch(auctionActions.setItems(formateditems))
 

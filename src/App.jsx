@@ -18,6 +18,9 @@ function App() {
           <Route path='myitems' element={<PrivateRoute><MyItems /></PrivateRoute>} />
           <Route path='myItems/:itemId' element={<PrivateRoute><ItemDetails /></PrivateRoute>} />
 
+          <Route path='cetagories/:cetagory' element={<PrivateRoute><Home /></PrivateRoute>} />
+     
+
         </Route>
         <Route path='login' element={<Login />} />
         <Route path='register' element={<Signup />} />
