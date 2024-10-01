@@ -14,6 +14,7 @@ function App() {
         <Route path='/' element={<Layout />} >
           <Route index element={<PrivateRoute><Home /></PrivateRoute>} />
           <Route path='listitem' element={<PrivateRoute><ListItems /></PrivateRoute>} />
+          <Route path='edititem/:id' element={<PrivateRoute><ListItems /></PrivateRoute>} />
           <Route path='allItems/:itemId' element={<PrivateRoute><ItemDetails /></PrivateRoute>} />
           <Route path='myitems' element={<PrivateRoute><MyItems /></PrivateRoute>} />
           <Route path='myItems/:itemId' element={<PrivateRoute><ItemDetails /></PrivateRoute>} />

@@ -22,6 +22,8 @@ function Home() {
     return allItems;
   }, [allItems]);
 
+  
+
   return (
     <>
       <h1>Welcome to AuctioNex</h1>
@@ -46,7 +48,9 @@ function Home() {
         </ParentCard>
       ) : allItemsStored[cetagory] ? (
         <ParentCard>
-          {allItemsStored[cetagory].map((item) => (
+          {allItemsStored[cetagory]
+           .filter((item) => item.itemOwner !== currentUser.uid)
+          .map((item) => (
             <Link key={item.key} to={`/allItems/${item.key}`}>
               <AuctionCard
                 id={item.key}

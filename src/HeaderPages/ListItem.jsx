@@ -2,9 +2,9 @@ import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { postItem } from '../redux/itemActions'
+import { postItem, editItem } from '../redux/itemActions'
 import { AuthContext } from '../context/AuthProvider';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const auctionSchema = z.object({
   itemTitle: z.string().min(3, 'Item title must be at least 3 characters long'),
@@ -16,19 +16,46 @@ const auctionSchema = z.object({
 });
 
 const AuctionForm = () => {
+  const { pathname, state } = useLocation()
+  const itemId = useParams()
+  // console.log(pathname, state)
+
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    defaultValues: {
+      itemTitle: state?.itemTitle || '',
+      description: state?.description || '',
+      startingBid: state?.startingBid || '',
+      auctionDuration: state?.auctionDuration || '',
+      category: state?.category || '',
+    },
     resolver: zodResolver(auctionSchema),
   });
   const { currentUser } = useContext(AuthContext)
   const navigate = useNavigate()
   const [error, setError] = useState('');
+  const [postmsg, setpostMsg] = useState('');
 
   const onSubmit = async (data) => {
+    if (pathname.includes('listitem')) {
+      await postItem({
+        itemOwner: currentUser.uid,
+        ...data,
+        recentBids: { user: 'default', bid: data.startingBid }
+      });
+      navigate('/');
+    } else {
+      try{
+        await editItem(itemId.id, data)
+        navigate('/myitems')
+
+      }
+      catch{
+        setpostMsg('Could not edit items')
+      }
+    }
 
 
-
-    await postItem({ itemOwner: currentUser.uid, ...data , recentBids: {user:'defult', bid:data.startingBid}})
-    navigate('/')
   };
 
   const validateImageFiles = (event) => {
@@ -120,11 +147,26 @@ const AuctionForm = () => {
         />
         {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
         {errors.images && <p className="text-red-500">{errors.images.message}</p>}
+
+        {/* Display uploaded images if pathname contains 'editItem' */}
+        {pathname.includes('editItem') && state.imgUrls && state.imgUrls.length > 0 && (
+          <div className="flex space-x-2 mt-2">
+            {state.imgUrls.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt={`Uploaded image ${index + 1}`}
+                className="w-20 h-20 object-cover rounded" // Adjust size if necessary
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <button type="submit" disabled={isSubmitting} className="bg-blue-500 text-white p-2 rounded">
         {isSubmitting ? 'Loading...' : "Submit Auction"}
       </button>
+      {postmsg && <p className="text-red-500">{postmsg}</p>}
     </form>
   );
 };

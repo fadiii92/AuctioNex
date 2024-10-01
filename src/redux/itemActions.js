@@ -6,19 +6,33 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const baseurl = 'https://auctionex-62baa-default-rtdb.firebaseio.com'
 
-export const postItem = async (data) => {
-    const storage = getStorage()
-    const imgUrls = []
-    const imageFiles = data.images
+const imgConversion = async (images) => {
     try {
-        for (let i = 0; i < imageFiles.length; i++) {
-            const imageFile = imageFiles[i]
-            const storageRef = ref(storage, `images/${imageFile.name}`)
-            const snapshot = await uploadBytes(storageRef, imageFile)
-            const downloadURL = await getDownloadURL(snapshot.ref)
-            imgUrls.push(downloadURL);
-        }
-        console.log(imgUrls)
+      const storage = getStorage();
+      const imgUrls = [];
+      const imageFiles = images;
+    
+      for (let i = 0; i < imageFiles.length; i++) {
+        const imageFile = imageFiles[i];
+        const storageRef = ref(storage, `images/${imageFile.name}`);
+    
+        const snapshot = await uploadBytes(storageRef, imageFile);
+        const downloadURL = await getDownloadURL(snapshot.ref);
+         
+        imgUrls.push(downloadURL);
+      }
+        return imgUrls;
+    } catch (error) {
+      console.error('Error during image conversion:', error);
+      throw new Error('Image conversion failed'); // Throw error to handle in editItem function
+    }
+  };
+  
+
+export const postItem = async (data) => {
+   
+    try {
+        const imgUrls =await imgConversion(data.images)
         const updatedData = { ...data, imgUrls }
         await axios.post(`https://auctionex-62baa-default-rtdb.firebaseio.com/auctionitems/${(data.category).toLowerCase()}.json`, { ...data, imgUrls })
         console.log('Data added', updatedData)
@@ -47,7 +61,7 @@ export const retrieveItems = () => {
             }
             formateditems[ceta] = items
         }
-           console.log(formateditems.furniture)
+        //    console.log(formateditems.furniture)
 
         dispatch(auctionActions.setItems(formateditems))
 
@@ -76,6 +90,24 @@ export const deleteItem =async (id, cetagory) =>{
     .then(resp=> console.log('deleted'))
     .catch(err => console.log('could not deleet', err))
 }
+
+
+export const editItem = async (item, data) => {
+    try {
+      const imgUrls = await imgConversion(data.images);      
+      const updatedData = { ...data, imgUrls };
+  
+      await axios.patch(`${baseurl}/auctionitems/${data.category.toLowerCase()}/${item}.json`, updatedData);
+      
+      console.log('Item edited successfully');
+    } catch (err) {
+      console.log('Error editing item', err);
+    }
+    
+    // Log item and data after all operations are complete
+    console.log(item, data);
+  }
+
 
 // export const retriveRecentBids = (item, cetagory)=>{
 //     return async (dispatch) => {

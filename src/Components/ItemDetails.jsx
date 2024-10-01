@@ -6,11 +6,10 @@ import { AuthContext } from '../context/AuthProvider';
 
 function ItemDetails() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { itemId } = useParams();
   const { pathname } = useLocation();
   const { currentUser } = useContext(AuthContext);
-  const navigate = useNavigate();
-
   const [loading, setLoading] = useState(true);
   const [mainImage, setMainImage] = useState('');
   const [bid, setBid] = useState('');
@@ -65,7 +64,7 @@ function ItemDetails() {
 
   const storedCurrentItem = useMemo(()=>{
     return currentItem
-  },currentItem)
+  },[currentItem])
 
   if (loading) {
     return (
@@ -146,7 +145,7 @@ function ItemDetails() {
     {/* Edit and Delete Buttons for item owner */}
     <div className="flex items-center space-x-4 mb-8">
       <button
-        onClick={() => console.log('Edit clicked')}
+        onClick={() => navigate(`/editItem/${itemId}` , {state: currentItem})}
         className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all"
       >
         Edit

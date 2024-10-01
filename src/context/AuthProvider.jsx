@@ -34,7 +34,13 @@ function AuthProvider({children}) {
     }
 
 
-    if(loading) return <div>Loading ... ...</div>
+    if (loading) {
+      return (
+        <div className="flex justify-center items-center h-screen bg-gray-100">
+          <p className="text-lg font-semibold text-gray-600">Loading...</p>
+        </div>
+      );
+    }
 
   return (
     <AuthContext.Provider value = {{currentUser,setCurrentUser, logout}}>
