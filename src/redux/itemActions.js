@@ -94,8 +94,13 @@ export const deleteItem =async (id, cetagory) =>{
 
 export const editItem = async (item, data) => {
     try {
-      const imgUrls = await imgConversion(data.images);      
-      const updatedData = { ...data, imgUrls };
+      let imgUrls, updatedData = data;
+      if((data.images).length > 0)
+      {
+         imgUrls = await imgConversion(data.images);      
+         updatedData = { ...data, imgUrls };
+
+      }
   
       await axios.patch(`${baseurl}/auctionitems/${data.category.toLowerCase()}/${item}.json`, updatedData);
       

@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { retrieveItems, placeBid, deleteItem } from '../redux/itemActions';
 import { AuthContext } from '../context/AuthProvider';
+import ConfirmPopup from '../miniComponents/ConfirmPopup';
 
 function ItemDetails() {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ function ItemDetails() {
   const [bidError, setBidError] = useState('');
   const [bidPlaceMsg, setBidPlaceMsg] = useState('');
   const [category, setCategory] = useState('');
+  const [isModelOpen, setisModelOpen] = useState(false)
 
   const { auctionItems } = useSelector((state) => state.auctionDataReducer);
 
@@ -152,12 +154,13 @@ function ItemDetails() {
       </button>
 
       <button
-        onClick={handleDelete}
+        onClick={()=>{setisModelOpen(true)}}
         className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
       >
         Delete
       </button>
     </div>
+    <ConfirmPopup open = {isModelOpen} onClose={()=>setisModelOpen(false)} deleteItem={handleDelete}></ConfirmPopup>
 
     {/* Show All Bids for item owner */}
     <h3 className="text-lg font-semibold mt-6 mb-4">All Bids</h3>

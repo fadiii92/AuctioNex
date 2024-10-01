@@ -6,18 +6,20 @@ import { postItem, editItem } from '../redux/itemActions'
 import { AuthContext } from '../context/AuthProvider';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-const auctionSchema = z.object({
+const auctionSchema =(isEditMode)=> z.object({
   itemTitle: z.string().min(3, 'Item title must be at least 3 characters long'),
   description: z.string().min(10, 'Description must be at least 10 characters long'),
   startingBid: z.number().positive('Starting bid must be a positive number'),
   auctionDuration: z.string().nonempty('Please select a valid auction duration'),
   category: z.enum(['Electronics', 'Clothing', 'Furniture', 'Books', 'Other']),
-  images: z.any().refine((files) => files?.length > 0, 'Please upload at least one image'),
+  images: isEditMode ? z.any() : z.any().refine((files) => files?.length > 0, 'Please upload at least one image'),
 });
 
 const AuctionForm = () => {
   const { pathname, state } = useLocation()
   const itemId = useParams()
+  const isEditMode = pathname.includes('editItem');
+
   // console.log(pathname, state)
 
 
@@ -29,7 +31,7 @@ const AuctionForm = () => {
       auctionDuration: state?.auctionDuration || '',
       category: state?.category || '',
     },
-    resolver: zodResolver(auctionSchema),
+    resolver: zodResolver(auctionSchema(isEditMode)),
   });
   const { currentUser } = useContext(AuthContext)
   const navigate = useNavigate()
@@ -125,7 +127,7 @@ const AuctionForm = () => {
 
       <div>
         <label>Category</label>
-        <select {...register('category')} className="border p-2 rounded w-full">
+        <select {...register('category')} disabled={isEditMode} className="border p-2 rounded w-full">
           <option value="">Select a category</option>
           <option value="Electronics">Electronics</option>
           <option value="Clothing">Clothing</option>
@@ -145,10 +147,9 @@ const AuctionForm = () => {
           className="border p-2 rounded w-full"
           onChange={validateImageFiles}
         />
-        {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         {errors.images && <p className="text-red-500">{errors.images.message}</p>}
 
-        {/* Display uploaded images if pathname contains 'editItem' */}
         {pathname.includes('editItem') && state.imgUrls && state.imgUrls.length > 0 && (
           <div className="flex space-x-2 mt-2">
             {state.imgUrls.map((url, index) => (
@@ -156,7 +157,7 @@ const AuctionForm = () => {
                 key={index}
                 src={url}
                 alt={`Uploaded image ${index + 1}`}
-                className="w-20 h-20 object-cover rounded" // Adjust size if necessary
+                className="w-20 h-20 object-cover rounded"
               />
             ))}
           </div>
