@@ -123,12 +123,8 @@ export const editItem = async (item, data) => {
 //         // console.log(allBids) 
         
 //         Object.values(allBids).map(item=> formatedBidsData.push(item))
-
-
 //         dispatch(auctionActions.setBids(formatedBidsData))
         
-
-
 //     }
 // }
 

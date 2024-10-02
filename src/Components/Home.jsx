@@ -46,7 +46,7 @@ function Home() {
             ))
           )}
         </ParentCard>
-      ) : allItemsStored[cetagory] ? (
+      ) : allItemsStored[cetagory] && allItemsStored[cetagory].filter((item) => item.itemOwner !== currentUser.uid).length > 0 ? (
         <ParentCard>
           {allItemsStored[cetagory]
            .filter((item) => item.itemOwner !== currentUser.uid)

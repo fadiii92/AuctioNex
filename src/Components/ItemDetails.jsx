@@ -88,9 +88,7 @@ function ItemDetails() {
   return (
     <div className="container mx-auto py-10 min-h-screen">
       <div className="flex flex-col lg:flex-row items-center lg:items-stretch h-full">
-        {/* Main image and thumbnails */}
         <div className="w-full lg:w-1/2 bg-gray-100 rounded-lg overflow-hidden shadow-lg h-full flex flex-col justify-between">
-          {/* Main image */}
           {mainImage && (
             <div className="h-[500px] w-full flex justify-center items-center bg-white">
               <img
@@ -101,7 +99,6 @@ function ItemDetails() {
             </div>
           )}
 
-          {/* Thumbnails */}
           {currentItem?.imgUrls && currentItem.imgUrls.length > 1 && (
             <div className="flex justify-center mt-4 space-x-2 p-2 bg-gray-200">
               {currentItem.imgUrls.slice(0, 3).map((url, index) => (
@@ -141,10 +138,8 @@ function ItemDetails() {
             </div>
           </div>
 
-          {/* Buttons or Bid Input */}
           {pathname.includes('myItems') ? (
   <>
-    {/* Edit and Delete Buttons for item owner */}
     <div className="flex items-center space-x-4 mb-8">
       <button
         onClick={() => navigate(`/editItem/${itemId}` , {state: currentItem})}
@@ -162,11 +157,13 @@ function ItemDetails() {
     </div>
     <ConfirmPopup open = {isModelOpen} onClose={()=>setisModelOpen(false)} deleteItem={handleDelete}></ConfirmPopup>
 
-    {/* Show All Bids for item owner */}
     <h3 className="text-lg font-semibold mt-6 mb-4">All Bids</h3>
     <div className="space-y-2">
       {storedCurrentItem?.recendBids && Object.values(storedCurrentItem.recendBids).length > 0 ? (
-        Object.values(storedCurrentItem.recendBids).map((item, index) => (
+        Object.values(storedCurrentItem.recendBids)
+        .slice(-3)
+        .reverse()
+        .map((item, index) => (
           <div key={index} className="bg-white border border-gray-300 p-3 rounded-md shadow-sm">
             <p className="text-sm text-gray-700">Bidder: {item.user}</p>
             <p className="text-sm text-gray-700">Bid: ${item.bid}</p>
@@ -179,7 +176,6 @@ function ItemDetails() {
   </>
 ) : (
   <>
-    {/* Input for placing bids */}
     <div className="flex items-center space-x-4 mb-6">
       <input
         type="number"
