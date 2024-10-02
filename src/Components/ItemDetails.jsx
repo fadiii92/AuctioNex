@@ -30,7 +30,7 @@ function ItemDetails() {
     dispatch(retrieveItems()).then(() => {
       setLoading(false);
     });
-  }, [dispatch, itemId, currentItem?.category, currentItem?.recendBids]);
+  }, [dispatch, currentItem]);
 
   useEffect(() => {
     if (currentItem) {
