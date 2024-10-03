@@ -36,7 +36,7 @@ function Footer() {
           Privacy Policy
         </NavLink>
         <NavLink
-          to="/terms"
+          to="/terms-and-conditions"
           className="text-white hover:text-teal-200 transition-colors"
         >
           Terms & Conditions

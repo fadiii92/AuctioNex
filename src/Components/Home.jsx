@@ -1,38 +1,74 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { retrieveItems } from "../redux/itemActions";
 import ParentCard from "../miniComponents/ParentCard";
 import AuctionCard from "../miniComponents/AuctionCard";
 import { Link, useLocation, useParams } from "react-router-dom";
+import useSearch from "../context/searchContext";
 
 function Home() {
   const { currentUser } = useContext(AuthContext);
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { cetagory } = useParams();
+  const { searchQuery } = useSearch();
 
   useEffect(() => {
     dispatch(retrieveItems());
   }, [dispatch]);
 
-  const allItems = useSelector((state) => state.auctionDataReducer.auctionItems);
+  const ItemsInStore = useSelector((state) => state.auctionDataReducer.auctionItems);
 
-  const allItemsStored = useMemo(() => {
-    return allItems;
-  }, [allItems]);
-
-  
+  const allItems = searchQuery
+    ? Object.values(ItemsInStore).map((category) =>
+        category.filter((item) =>
+          item.itemTitle.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      )
+    : ItemsInStore;
 
   return (
     <>
-      <h1>Welcome to AuctioNex</h1>
-      {currentUser && <p>You are logged in as: {currentUser.email}</p>}
+      <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 text-center my-8">
+        Auction Items
+      </h2>
+
       {pathname === '/' ? (
-        <ParentCard>
-          {Object.values(allItemsStored).map((category) => 
-            category.filter((item) => item.itemOwner !== currentUser.uid).map((item) => (
-              <Link key={item.key} to={`/allItems/${item.key}`}>
+        <ParentCard className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {Object.values(allItems).map((category) =>
+            category
+              .filter((item) => item.itemOwner !== currentUser.uid)
+              .map((item) => (
+                <Link
+                  key={item.key}
+                  to={`/allItems/${item.key}`}
+                  className="block hover:bg-gray-100 transition-colors duration-200 p-2 rounded-lg"
+                >
+                  <AuctionCard
+                    id={item.key}
+                    category={item.category}
+                    itemOwner={item.itemOwner}
+                    itemTitle={item.itemTitle}
+                    description={item.description}
+                    startingBid={item.startingBid}
+                    images={item.imgUrls}
+                    className="shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105"
+                  />
+                </Link>
+              ))
+          )}
+        </ParentCard>
+      ) : allItems[cetagory] && allItems[cetagory].filter((item) => item.itemOwner !== currentUser.uid).length > 0 ? (
+        <ParentCard className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {allItems[cetagory]
+            .filter((item) => item.itemOwner !== currentUser.uid)
+            .map((item) => (
+              <Link
+                key={item.key}
+                to={`/allItems/${item.key}`}
+                className="block hover:bg-gray-100 transition-colors duration-200 p-2 rounded-lg"
+              >
                 <AuctionCard
                   id={item.key}
                   category={item.category}
@@ -41,33 +77,26 @@ function Home() {
                   description={item.description}
                   startingBid={item.startingBid}
                   images={item.imgUrls}
+                  className="shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105"
                 />
               </Link>
-            ))
-          )}
-        </ParentCard>
-      ) : allItemsStored[cetagory] && allItemsStored[cetagory].filter((item) => item.itemOwner !== currentUser.uid).length > 0 ? (
-        <ParentCard>
-          {allItemsStored[cetagory]
-           .filter((item) => item.itemOwner !== currentUser.uid)
-          .map((item) => (
-            <Link key={item.key} to={`/allItems/${item.key}`}>
-              <AuctionCard
-                id={item.key}
-                category={item.category}
-                itemOwner={item.itemOwner}
-                itemTitle={item.itemTitle}
-                description={item.description}
-                startingBid={item.startingBid}
-                images={item.imgUrls}
-              />
-            </Link>
-          ))}
+            ))}
         </ParentCard>
       ) : (
-        <div className="flex justify-center items-center h-screen bg-gray-100">
-          <p className="text-lg font-semibold text-red-600">No Items Found</p>
-        </div>
+        allItems.every((category) => category.length === 0) ? (
+          <div className="flex flex-col justify-center items-center h-[80vh] bg-gray-50">
+            <p className="text-lg font-semibold text-gray-800">
+              No search results for <span className="text-red-600">"{searchQuery}"</span>
+            </p>
+            <p className="text-sm text-gray-600 mt-2">
+              Try adjusting your search or explore other categories.
+            </p>
+          </div>
+        ) : (
+          <div className="flex justify-center items-center h-[80vh] bg-gray-100">
+            <p className="text-lg font-semibold text-red-600">No Items Found</p>
+          </div>
+        )
       )}
     </>
   );

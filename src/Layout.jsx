@@ -6,7 +6,7 @@ function Layout() {
   return (
     <div>
       <Header />
-      <main className='min-h-screen	'>
+      <main className='min-h-[80vh]	'>
       <Outlet />
       </main>
       <Footer />
