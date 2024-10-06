@@ -30,7 +30,7 @@ function Home() {
 
   return (
     <>
-      <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 text-center my-8">
+      <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 text-center my-4">
         Auction Items
       </h2>
 
@@ -82,7 +82,7 @@ function Home() {
               </Link>
             ))}
         </ParentCard>
-      ) : allItems.every((category) => category.length === 0) ? (
+      ) :searchQuery && allItems.every((category) => category.length === 0) ? (
           <div className="flex flex-col justify-center items-center h-[70vh] bg-gray-50">
             <p className="text-lg font-semibold text-gray-800">
               No search results for <span className="text-red-600">"{searchQuery}"</span>
