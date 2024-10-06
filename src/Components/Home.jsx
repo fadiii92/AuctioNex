@@ -83,7 +83,7 @@ function Home() {
             ))}
         </ParentCard>
       ) : allItems.every((category) => category.length === 0) ? (
-          <div className="flex flex-col justify-center items-center h-[80vh] bg-gray-50">
+          <div className="flex flex-col justify-center items-center h-[70vh] bg-gray-50">
             <p className="text-lg font-semibold text-gray-800">
               No search results for <span className="text-red-600">"{searchQuery}"</span>
             </p>
@@ -92,7 +92,7 @@ function Home() {
             </p>
           </div>
         ) : (
-          <div className="flex justify-center items-center h-[80vh] bg-gray-100">
+          <div className="flex justify-center items-center h-[70vh] bg-gray-100">
             <p className="text-lg font-semibold text-red-600">No Items Found</p>
           </div>
         )
