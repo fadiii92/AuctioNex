@@ -85,49 +85,49 @@ const AuctionForm = () => {
 
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4 bg-white rounded-lg shadow-md">
       <div>
-        <label>Item Title</label>
+        <label className="block text-gray-700 font-semibold mb-2">Item Title</label>
         <input
           type="text"
           {...register('itemTitle')}
-          className="border p-2 rounded w-full"
+          className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
         />
         {errors.itemTitle && <p className="text-red-500">{errors.itemTitle.message}</p>}
       </div>
-
+  
       <div>
-        <label>Description</label>
+        <label className="block text-gray-700 font-semibold mb-2">Description</label>
         <textarea
           {...register('description')}
-          className="border p-2 rounded w-full"
+          className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
         />
         {errors.description && <p className="text-red-500">{errors.description.message}</p>}
       </div>
-
+  
       <div>
-        <label>Starting Bid</label>
+        <label className="block text-gray-700 font-semibold mb-2">Starting Bid</label>
         <input
           type="number"
           {...register('startingBid', { valueAsNumber: true })}
-          className="border p-2 rounded w-full"
+          className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
         />
         {errors.startingBid && <p className="text-red-500">{errors.startingBid.message}</p>}
       </div>
-
+  
       <div>
-        <label>Auction Duration</label>
+        <label className="block text-gray-700 font-semibold mb-2">Auction Duration</label>
         <input
           type="datetime-local"
           {...register('auctionDuration')}
-          className="border p-2 rounded w-full"
+          className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
         />
         {errors.auctionDuration && <p className="text-red-500">{errors.auctionDuration.message}</p>}
       </div>
-
+  
       <div>
-        <label>Category</label>
-        <select {...register('category')} disabled={isEditMode} className="border p-2 rounded w-full">
+        <label className="block text-gray-700 font-semibold mb-2">Category</label>
+        <select {...register('category')} disabled={isEditMode} className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
           <option value="">Select a category</option>
           <option value="Electronics">Electronics</option>
           <option value="Clothing">Clothing</option>
@@ -137,19 +137,19 @@ const AuctionForm = () => {
         </select>
         {errors.category && <p className="text-red-500">{errors.category.message}</p>}
       </div>
-
+  
       <div>
-        <label>Images</label>
+        <label className="block text-gray-700 font-semibold mb-2">Images</label>
         <input
           type="file"
           {...register('images')}
           multiple
-          className="border p-2 rounded w-full"
+          className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           onChange={validateImageFiles}
         />
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="text-red-500">{error}</p>}
         {errors.images && <p className="text-red-500">{errors.images.message}</p>}
-
+  
         {pathname.includes('editItem') && state.imgUrls && state.imgUrls.length > 0 && (
           <div className="flex space-x-2 mt-2">
             {state.imgUrls.map((url, index) => (
@@ -157,19 +157,21 @@ const AuctionForm = () => {
                 key={index}
                 src={url}
                 alt={`Uploaded image ${index + 1}`}
-                className="w-20 h-20 object-cover rounded"
+                className="w-20 h-20 object-cover rounded border border-gray-300 shadow-sm"
               />
             ))}
           </div>
         )}
       </div>
-
-      <button type="submit" disabled={isSubmitting} className="bg-blue-500 text-white p-2 rounded">
+  
+      <button type="submit" disabled={isSubmitting} className={`py-2 px-4 text-white rounded transition ${isSubmitting ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'}`}>
         {isSubmitting ? 'Loading...' : "Submit Auction"}
       </button>
+  
       {postmsg && <p className="text-red-500">{postmsg}</p>}
     </form>
   );
+  
 };
 
 export default AuctionForm;

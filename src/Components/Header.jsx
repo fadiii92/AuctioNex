@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import { NavLink, Link} from 'react-router-dom';
 import { AuthContext } from '../context/AuthProvider';
 import useSearch from '../context/searchContext';
@@ -10,7 +10,20 @@ const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
   const { searchQuery, updateSearchQuery } = useSearch();
   const searchRef = useRef(null)
+  const dropdownRef = useRef(null);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false); // Close the dropdown if clicked outside
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -116,7 +129,7 @@ const Header = () => {
             </NavLink>
 
             {/* Dropdown for Browse Auctions */}
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <button
                 className="text-white hover:text-teal-200 font-semibold focus:outline-none flex items-center"
                 onClick={toggleDropdown}

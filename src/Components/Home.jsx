@@ -22,10 +22,10 @@ function Home() {
 
   const allItems = searchQuery
     ? Object.values(ItemsInStore).map((category) =>
-        category.filter((item) =>
-          item.itemTitle.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+      category.filter((item) =>
+        item.itemTitle.toLowerCase().includes(searchQuery.toLowerCase())
       )
+    )
     : ItemsInStore;
 
   return (
@@ -82,21 +82,24 @@ function Home() {
               </Link>
             ))}
         </ParentCard>
-      ) :searchQuery && allItems.every((category) => category.length === 0) ? (
-          <div className="flex flex-col justify-center items-center h-[70vh] bg-gray-50">
-            <p className="text-lg font-semibold text-gray-800">
-              No search results for <span className="text-red-600">"{searchQuery}"</span>
-            </p>
-            <p className="text-sm text-gray-600 mt-2">
-              Try adjusting your search or explore other categories.
-            </p>
-          </div>
-        ) : (
-          <div className="flex justify-center items-center h-[70vh] bg-gray-100">
-            <p className="text-lg font-semibold text-red-600">No Items Found</p>
-          </div>
-        )
+      ) : (
+        <div className="flex justify-center items-center h-[70vh] bg-gray-100">
+          <p className="text-lg font-semibold text-red-600">No Items Found</p>
+        </div>
+      )
       }
+      {searchQuery  && allItems.flat().length===0 && (
+        <div className="flex flex-col justify-center items-center h-[70vh] bg-gray-50">
+          <p className="text-lg font-semibold text-gray-800">
+            No search results for <span className="text-red-600">"{searchQuery}"</span>
+          </p>
+          <p className="text-sm text-gray-600 mt-2">
+            Try adjusting your search or explore other categories.
+          </p>
+        </div>
+      )}
+
+
     </>
   );
 }
