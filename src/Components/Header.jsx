@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState, useEffect } from 'react';
-import { NavLink, Link} from 'react-router-dom';
+import { NavLink, Link, useLocation, useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthProvider';
 import useSearch from '../context/searchContext';
 
@@ -11,6 +11,8 @@ const Header = () => {
   const { searchQuery, updateSearchQuery } = useSearch();
   const searchRef = useRef(null)
   const dropdownRef = useRef(null);
+  const { pathname } = useLocation();
+  const { cetagory } = useParams();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -131,10 +133,10 @@ const Header = () => {
             {/* Dropdown for Browse Auctions */}
             <div className="relative" ref={dropdownRef}>
               <button
-                className="text-white hover:text-teal-200 font-semibold focus:outline-none flex items-center"
+                className="text-white hover:text-teal-200 font-semibold focus:outline-none flex items-center min-l min-w-[100px]"
                 onClick={toggleDropdown}
               >
-                Browse Auctions
+                {pathname.includes(cetagory) ? <span>{cetagory.charAt(0).toUpperCase() + cetagory.slice(1).toLowerCase()}</span> : <span>Browse</span>}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className={`ml-1 h-4 w-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}

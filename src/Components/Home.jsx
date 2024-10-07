@@ -83,7 +83,7 @@ function Home() {
             ))}
         </ParentCard>
       ) : (
-        <div className="flex justify-center items-center h-[70vh] bg-gray-100">
+        <div className="flex justify-center items-center h-[70vh]">
           <p className="text-lg font-semibold text-red-600">No Items Found</p>
         </div>
       )
