@@ -5,6 +5,7 @@ import useSearch from '../context/searchContext';
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isResDropdownOpen, setIsResDropdownOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { searchQuery, updateSearchQuery } = useSearch();
   const { logout } = useContext(AuthContext);
@@ -18,7 +19,6 @@ const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Handle sidebar click outside
       if (
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target) &&
@@ -28,7 +28,6 @@ const Header = () => {
         setIsSidebarOpen(false);
       }
     
-      // Handle dropdown click outside (regular dropdown)
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target)
@@ -36,15 +35,14 @@ const Header = () => {
         setIsDropdownOpen(false);
       }
     
-      // Handle responsive dropdown (if it's different from the regular one)
       if (
         dropdownRefRes.current &&
         !dropdownRefRes.current.contains(event.target)
       ) {
-        setIsDropdownResOpen(false);
+        setIsResDropdownOpen(false);
       }
     };
-      
+
 
     document.addEventListener('click', handleClickOutside);
     return () => {
@@ -67,6 +65,9 @@ const Header = () => {
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+  const toggleResDropdown = () => {
+    setIsResDropdownOpen(!isResDropdownOpen);
   };
 
   const handleSearchSubmit = (e) => {
@@ -232,7 +233,7 @@ const Header = () => {
               <span className="text-teal-300">Nex</span>
             </NavLink>
           </div>
-          <nav className="flex flex-col">
+          <nav className="flex flex-col gap-2">
             <NavLink to="/" onClick={toggleSidebar} className="text-white py-2 hover:text-teal-200">
               Home
             </NavLink>
@@ -244,12 +245,12 @@ const Header = () => {
             <div className="relative" ref={dropdownRefRes}>
               <button
                 className="text-white py-2 hover:text-teal-200 focus:outline-none flex items-center"
-                onClick={toggleDropdown}
+                onClick={toggleResDropdown}
               >
                 Browse Auctions
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className={`ml-1 h-4 w-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
+                  className={`ml-1 h-4 w-4 transition-transform duration-300 ${isResDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -257,23 +258,23 @@ const Header = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              {isDropdownOpen && (
-                <div className="mt-2">
-                  <ul className="py-2 text-white">
+              {isResDropdownOpen && (
+                <div>
+                  <ul className="py-2 text-white list-disc pl-4">
                     <Link to={`cetagories/${'electronics'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Electronics</li>
+                      <li className="hover:bg-indigo-800 py-2 cursor-pointer">Electronics</li>
                     </Link>
                     <Link to={`cetagories/${'clothing'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Clothing</li>
+                      <li className="hover:bg-indigo-800 py-2 cursor-pointer">Clothing</li>
                     </Link>
                     <Link to={`cetagories/${'furniture'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Furniture</li>
+                      <li className="hover:bg-indigo-800 py-2 cursor-pointer">Furniture</li>
                     </Link>
                     <Link to={`cetagories/${'books'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Books</li>
+                      <li className="hover:bg-indigo-800 py-2 cursor-pointer">Books</li>
                     </Link>
                     <Link to={`cetagories/${'other'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Other</li>
+                      <li className="hover:bg-indigo-800 py-2 cursor-pointer">Other</li>
                     </Link>
                   </ul>
                 </div>
