@@ -112,11 +112,10 @@ function ItemDetails() {
                   src={url}
                   alt={`Thumbnail-${index}`}
                   onClick={() => setMainImage(url)}
-                  className={`w-16 h-16 object-cover cursor-pointer border-2 rounded-md transition duration-200 ease-in-out transform ${
-                    mainImage === url
+                  className={`w-16 h-16 object-cover cursor-pointer border-2 rounded-md transition duration-200 ease-in-out transform ${mainImage === url
                       ? "border-blue-500 scale-110"
                       : "border-gray-300 hover:border-blue-400"
-                  }`}
+                    }`}
                 />
               ))}
             </div>
@@ -178,7 +177,7 @@ function ItemDetails() {
               <h3 className="text-lg font-semibold mt-6 mb-4">All Bids</h3>
               <div className="space-y-2">
                 {currentItem?.recentBids &&
-                Object.values(currentItem.recentBids).length > 0 ? (
+                  Object.values(currentItem.recentBids).length > 0 ? (
                   Object.values(currentItem.recentBids)
                     .slice(-3)
                     .reverse()
@@ -243,7 +242,7 @@ function ItemDetails() {
 
               <div className="space-y-2">
                 {currentItem?.recentBids &&
-                Object.keys(currentItem.recentBids).length > 0 ? (
+                  Object.keys(currentItem.recentBids).length > 0 ? (
                   Object.values(currentItem.recentBids)
                     .slice(-3)
                     .reverse()

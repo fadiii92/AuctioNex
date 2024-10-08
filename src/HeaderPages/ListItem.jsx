@@ -66,8 +66,6 @@ const AuctionForm = () => {
       await postItem({
         itemOwner: currentUser.uid,
         ...data,
-        startingBid: data.startingBid,
-        recentBids: {},
       });
       navigate("/");
     } else {

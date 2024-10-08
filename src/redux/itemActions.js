@@ -34,7 +34,7 @@ export const postItem = async (data) => {
     try {
         const imgUrls =await imgConversion(data.images)
         const updatedData = { ...data, imgUrls }
-        await axios.post(`https://auctionex-62baa-default-rtdb.firebaseio.com/auctionitems/${(data.category).toLowerCase()}.json`, { ...data, imgUrls, recentBids:{item:"initial", user:"default", bid:data.startingBid}, })
+        await axios.post(`https://auctionex-62baa-default-rtdb.firebaseio.com/auctionitems/${(data.category).toLowerCase()}.json`, { ...data, imgUrls, startingBid:data.startingBid })
         console.log('Data added', updatedData)
     }
     catch (error) {
