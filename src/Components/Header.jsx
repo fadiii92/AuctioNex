@@ -1,10 +1,11 @@
-import React, { useContext, useRef, useState, useEffect } from 'react';
-import { NavLink, Link, useLocation, useParams } from 'react-router-dom';
-import { AuthContext } from '../context/AuthProvider';
-import useSearch from '../context/searchContext';
+import React, { useContext, useRef, useState, useEffect } from "react";
+import { NavLink, Link, useLocation, useParams } from "react-router-dom";
+import { AuthContext } from "../context/AuthProvider";
+import useSearch from "../context/searchContext";
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isResDropdownOpen, setIsResDropdownOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { searchQuery, updateSearchQuery } = useSearch();
   const { logout } = useContext(AuthContext);
@@ -18,7 +19,6 @@ const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Handle sidebar click outside
       if (
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target) &&
@@ -27,46 +27,39 @@ const Header = () => {
       ) {
         setIsSidebarOpen(false);
       }
-    
-      // Handle dropdown click outside (regular dropdown)
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target)
-      ) {
+
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
-    
-      // Handle responsive dropdown (if it's different from the regular one)
       if (
         dropdownRefRes.current &&
         !dropdownRefRes.current.contains(event.target)
       ) {
-        setIsDropdownResOpen(false);
+        setIsResDropdownOpen(false);
       }
     };
-      
 
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside);
-      document.body.classList.remove('overflow-hidden');
-
+      document.removeEventListener("click", handleClickOutside);
+      document.body.classList.remove("overflow-hidden");
     };
   }, []);
-
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
     if (!isSidebarOpen) {
-      document.body.classList.add('overflow-hidden');
+      document.body.classList.add("overflow-hidden");
     } else {
-      document.body.classList.remove('overflow-hidden');
+      document.body.classList.remove("overflow-hidden");
     }
   };
 
-
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+  const toggleResDropdown = () => {
+    setIsResDropdownOpen(!isResDropdownOpen);
   };
 
   const handleSearchSubmit = (e) => {
@@ -86,7 +79,10 @@ const Header = () => {
           </div>
 
           {/* Search Bar */}
-          <form onSubmit={handleSearchSubmit} className="hidden lg:flex items-center space-x-2 bg-white rounded-full px-4 py-1 shadow-md w-1/3">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="hidden lg:flex items-center space-x-2 bg-white rounded-full px-4 py-1 shadow-md w-1/3"
+          >
             <input
               type="text"
               placeholder="Search auctions..."
@@ -97,8 +93,8 @@ const Header = () => {
               <button
                 type="button"
                 onClick={() => {
-                  updateSearchQuery('');
-                  searchRef.current.value = '';
+                  updateSearchQuery("");
+                  searchRef.current.value = "";
                 }}
                 className="ml-2 text-red-500"
               >
@@ -139,7 +135,11 @@ const Header = () => {
                 stroke="currentColor"
                 className="w-6 h-6"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16m-7 6h7"
+                />
               </svg>
             </button>
           </div>
@@ -148,7 +148,9 @@ const Header = () => {
             <NavLink
               to="/"
               className={({ isActive }) =>
-                isActive ? 'text-teal-300 font-bold' : 'text-white hover:text-teal-200 transition-colors'
+                isActive
+                  ? "text-teal-300 font-bold"
+                  : "text-white hover:text-teal-200 transition-colors"
               }
             >
               Home
@@ -156,7 +158,9 @@ const Header = () => {
             <NavLink
               to="/listitem"
               className={({ isActive }) =>
-                isActive ? 'text-teal-300 font-bold' : 'text-white hover:text-teal-200 transition-colors'
+                isActive
+                  ? "text-teal-300 font-bold"
+                  : "text-white hover:text-teal-200 transition-colors"
               }
             >
               List Item
@@ -168,36 +172,58 @@ const Header = () => {
                 className="text-white hover:text-teal-200 font-semibold focus:outline-none flex items-center min-l min-w-[100px]"
                 onClick={toggleDropdown}
               >
-                {pathname.includes(cetagory)
-                  ? <span>{cetagory.charAt(0).toUpperCase() + cetagory.slice(1).toLowerCase()}</span>
-                  : <span>Browse</span>}
+                {pathname.includes(cetagory) ? (
+                  <span>
+                    {cetagory.charAt(0).toUpperCase() +
+                      cetagory.slice(1).toLowerCase()}
+                  </span>
+                ) : (
+                  <span>Browse</span>
+                )}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className={`ml-1 h-4 w-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
+                  className={`ml-1 h-4 w-4 transition-transform duration-300 ${
+                    isDropdownOpen ? "rotate-180" : "rotate-0"
+                  }`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-indigo-700 shadow-lg rounded-lg z-50">
                   <ul className="py-2 text-white">
-                    <Link to={`cetagories/${'electronics'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Electronics</li>
+                    <Link to={`cetagories/${"electronics"}`}>
+                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">
+                        Electronics
+                      </li>
                     </Link>
-                    <Link to={`cetagories/${'clothing'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Clothing</li>
+                    <Link to={`cetagories/${"clothing"}`}>
+                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">
+                        Clothing
+                      </li>
                     </Link>
-                    <Link to={`cetagories/${'furniture'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Furniture</li>
+                    <Link to={`cetagories/${"furniture"}`}>
+                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">
+                        Furniture
+                      </li>
                     </Link>
-                    <Link to={`cetagories/${'books'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Books</li>
+                    <Link to={`cetagories/${"books"}`}>
+                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">
+                        Books
+                      </li>
                     </Link>
-                    <Link to={`cetagories/${'other'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Other</li>
+                    <Link to={`cetagories/${"other"}`}>
+                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">
+                        Other
+                      </li>
                     </Link>
                   </ul>
                 </div>
@@ -207,15 +233,31 @@ const Header = () => {
             <NavLink
               to="/myitems"
               className={({ isActive }) =>
-                isActive ? 'text-teal-300 font-bold' : 'text-white hover:text-teal-200 transition-colors'
+                isActive
+                  ? "text-teal-300 font-bold"
+                  : "text-white hover:text-teal-200 transition-colors"
               }
             >
               My Items
             </NavLink>
 
+            <NavLink
+              to="/results"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-teal-300 font-bold"
+                  : "text-white hover:text-teal-200 transition-colors"
+              }
+            >
+              Results
+            </NavLink>
+
             <button
               className="bg-red-500 text-white font-semibold py-2 px-4 rounded-md border border-transparent hover:bg-red-600 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition-all duration-300"
-              onClick={() => { toggleSidebar(); logout(); }}
+              onClick={() => {
+                toggleSidebar();
+                logout();
+              }}
             >
               Logout
             </button>
@@ -225,18 +267,29 @@ const Header = () => {
 
       {/* Sidebar */}
       {isSidebarOpen && (
-        <div className="fixed top-0 right-0 w-64 h-full bg-indigo-700 shadow-lg z-50 p-4 overflow-y-auto" ref={sidebarRef}>
+        <div
+          className="fixed top-0 right-0 w-64 h-full bg-indigo-700 shadow-lg z-50 p-4 overflow-y-auto"
+          ref={sidebarRef}
+        >
           <div className="text-3xl font-bold">
             <NavLink to="/" className="flex items-center">
               <span className="text-white">Auctio</span>
               <span className="text-teal-300">Nex</span>
             </NavLink>
           </div>
-          <nav className="flex flex-col">
-            <NavLink to="/" onClick={toggleSidebar} className="text-white py-2 hover:text-teal-200">
+          <nav className="flex flex-col gap-2">
+            <NavLink
+              to="/"
+              onClick={toggleSidebar}
+              className="text-white py-2 hover:text-teal-200"
+            >
               Home
             </NavLink>
-            <NavLink to="/listitem" onClick={toggleSidebar} className="text-white py-2 hover:text-teal-200">
+            <NavLink
+              to="/listitem"
+              onClick={toggleSidebar}
+              className="text-white py-2 hover:text-teal-200"
+            >
               List Item
             </NavLink>
 
@@ -244,48 +297,72 @@ const Header = () => {
             <div className="relative" ref={dropdownRefRes}>
               <button
                 className="text-white py-2 hover:text-teal-200 focus:outline-none flex items-center"
-                onClick={toggleDropdown}
+                onClick={toggleResDropdown}
               >
                 Browse Auctions
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className={`ml-1 h-4 w-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
+                  className={`ml-1 h-4 w-4 transition-transform duration-300 ${
+                    isResDropdownOpen ? "rotate-180" : "rotate-0"
+                  }`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
-              {isDropdownOpen && (
-                <div className="mt-2">
-                  <ul className="py-2 text-white">
-                    <Link to={`cetagories/${'electronics'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Electronics</li>
+              {isResDropdownOpen && (
+                <div>
+                  <ul className="py-2 text-white list-disc pl-4">
+                    <Link to={`cetagories/${"electronics"}`}>
+                      <li className="hover:bg-indigo-800 py-2 cursor-pointer">
+                        Electronics
+                      </li>
                     </Link>
-                    <Link to={`cetagories/${'clothing'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Clothing</li>
+                    <Link to={`cetagories/${"clothing"}`}>
+                      <li className="hover:bg-indigo-800 py-2 cursor-pointer">
+                        Clothing
+                      </li>
                     </Link>
-                    <Link to={`cetagories/${'furniture'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Furniture</li>
+                    <Link to={`cetagories/${"furniture"}`}>
+                      <li className="hover:bg-indigo-800 py-2 cursor-pointer">
+                        Furniture
+                      </li>
                     </Link>
-                    <Link to={`cetagories/${'books'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Books</li>
+                    <Link to={`cetagories/${"books"}`}>
+                      <li className="hover:bg-indigo-800 py-2 cursor-pointer">
+                        Books
+                      </li>
                     </Link>
-                    <Link to={`cetagories/${'other'}`}>
-                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Other</li>
+                    <Link to={`cetagories/${"other"}`}>
+                      <li className="hover:bg-indigo-800 py-2 cursor-pointer">
+                        Other
+                      </li>
                     </Link>
                   </ul>
                 </div>
               )}
             </div>
 
-            <NavLink to="/myitems" onClick={toggleSidebar} className="text-white py-2 hover:text-teal-200">
+            <NavLink
+              to="/myitems"
+              onClick={toggleSidebar}
+              className="text-white py-2 hover:text-teal-200"
+            >
               My Items
             </NavLink>
             <button
               className="bg-red-500 text-white font-semibold py-2 px-4 rounded-md border border-transparent hover:bg-red-600 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition-all duration-300"
-              onClick={() => { toggleSidebar(); logout(); }}
+              onClick={() => {
+                toggleSidebar();
+                logout();
+              }}
             >
               Logout
             </button>
