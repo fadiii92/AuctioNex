@@ -38,7 +38,7 @@ function ItemDetails() {
       setMainImage(currentItem.imgUrls ? currentItem.imgUrls[0] : '');
       setCategory(currentItem.category);
     }
-  }, []);
+  }, [currentItem]);
 
   const handleBid = async () => {
     const bidValue = parseInt(bid);
@@ -57,16 +57,12 @@ function ItemDetails() {
   const handleDelete = async () => {
     try {
       await deleteItem(itemId, category);
-      alert('Deleted Successfully');
       navigate('/myitems');
+      alert('Deleted Successfully');
     } catch (err) {
       alert('Something went wrong. Could not delete');
     }
   };
-
-  const storedCurrentItem = useMemo(()=>{
-    return currentItem
-  },[currentItem])
 
   if (loading) {
     return (
@@ -76,7 +72,7 @@ function ItemDetails() {
     );
   }
 
-  if (!storedCurrentItem) {
+  if (!currentItem) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-100">
         <p className="text-lg font-semibold text-red-600">Item not found</p>
@@ -86,7 +82,7 @@ function ItemDetails() {
 
 
   return (
-  <div className="container mx-auto py-10 min-h-screen">
+  <div className="container mx-auto py-10">
     <div className="flex flex-col lg:flex-row items-stretch h-full">
       {/* Main Image Section */}
       <div className="w-full lg:w-1/2 bg-gray-100 rounded-lg overflow-hidden shadow-lg h-full flex flex-col justify-between">
@@ -94,7 +90,7 @@ function ItemDetails() {
           <div className="h-[500px] w-full flex justify-center items-center bg-white">
             <img
               src={mainImage}
-              alt={storedCurrentItem?.itemTitle}
+              alt={currentItem?.itemTitle}
               className="object-contain w-[400px] h-[400px] max-w-full max-h-full shadow-md"
             />
           </div>
@@ -120,21 +116,21 @@ function ItemDetails() {
       <div className="w-full lg:w-1/2 lg:ml-8 mt-6 lg:mt-0 bg-white p-6 rounded-lg shadow-lg h-full flex flex-col justify-between">
         <div>
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            {storedCurrentItem?.itemTitle}
+            {currentItem?.itemTitle}
           </h2>
 
           <p className="text-lg text-gray-500 mb-4">
-            Category: <span className="font-semibold">{storedCurrentItem?.category}</span>
+            Category: <span className="font-semibold">{currentItem?.category}</span>
           </p>
 
-          <p className="text-gray-700 mb-8">{storedCurrentItem?.description}</p>
+          <p className="text-gray-700 mb-8">{currentItem?.description}</p>
 
           <div className="flex justify-between items-center mb-8">
             <p className="text-2xl text-gray-800 font-semibold">
               Current Bid: <span className="text-blue-600">${currentBid}</span>
             </p>
             <p className="text-sm text-gray-500">
-              Auction ends on: {new Date(storedCurrentItem?.auctionDuration).toLocaleDateString()}
+              Auction ends on: {new Date(currentItem?.auctionDuration).toLocaleDateString()}
             </p>
           </div>
         </div>
@@ -162,8 +158,8 @@ function ItemDetails() {
 
             <h3 className="text-lg font-semibold mt-6 mb-4">All Bids</h3>
             <div className="space-y-2">
-              {storedCurrentItem?.recendBids && Object.values(storedCurrentItem.recendBids).length > 0 ? (
-                Object.values(storedCurrentItem.recendBids)
+              {currentItem?.recendBids && Object.values(currentItem.recendBids).length > 0 ? (
+                Object.values(currentItem.recendBids)
                   .slice(-3)
                   .reverse()
                   .map((item, index) => (
@@ -203,8 +199,8 @@ function ItemDetails() {
             {/* Show Recent Bids for Non-Owner */}
             <h3 className="text-lg font-semibold mt-6 mb-4">Recent Bids</h3>
             <div className="space-y-2">
-              {storedCurrentItem?.recendBids && Object.keys(storedCurrentItem.recendBids).length > 0 ? (
-                Object.values(storedCurrentItem.recendBids)
+              {currentItem?.recendBids && Object.keys(currentItem.recendBids).length > 0 ? (
+                Object.values(currentItem.recendBids)
                   .slice(-3)
                   .reverse()
                   .map((item, index) => (

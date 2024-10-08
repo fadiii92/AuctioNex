@@ -3,21 +3,32 @@ import { NavLink, Link, useLocation, useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthProvider';
 import useSearch from '../context/searchContext';
 
-
 const Header = () => {
-  const { logout } = useContext(AuthContext);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
   const { searchQuery, updateSearchQuery } = useSearch();
-  const searchRef = useRef(null)
-  const dropdownRef = useRef(null);
+  const { logout } = useContext(AuthContext);
   const { pathname } = useLocation();
   const { cetagory } = useParams();
+  const dropdownRef = useRef(null);
+  const searchRef = useRef(null);
+  const sidebarRef = useRef(null);
+  const hamburgerRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Check if click is outside the sidebar and the hamburger button
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        hamburgerRef.current &&
+        !hamburgerRef.current.contains(event.target)
+      ) {
+        setIsSidebarOpen(false);
+      }
+
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false); // Close the dropdown if clicked outside
+        setIsDropdownOpen(false);
       }
     };
 
@@ -25,28 +36,25 @@ const Header = () => {
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, [dropdownRef]);
+  }, [dropdownRef, isSidebarOpen]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen); // Toggle dropdown
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    updateSearchQuery(searchRef.current.value)
-
-    console.log(`Search Query: ${searchQuery}`);
+    updateSearchQuery(searchRef.current.value);
   };
 
   return (
     <>
       <header className="bg-indigo-600 shadow-lg p-4 sticky top-0 z-50">
         <div className="container mx-auto flex justify-between items-center">
-
           <div className="text-3xl font-bold">
             <NavLink to="/" className="flex items-center">
               <span className="text-white">Auctio</span>
@@ -56,41 +64,41 @@ const Header = () => {
 
           {/* Search Bar */}
           <form onSubmit={handleSearchSubmit} className="hidden lg:flex items-center space-x-2 bg-white rounded-full px-4 py-1 shadow-md w-1/3">
-          <input
-            type="text"
-            placeholder="Search auctions..."
-            ref={searchRef}
-            className="w-full px-2 py-1 focus:outline-none text-gray-700 rounded-full"
-          />
-          {searchQuery && (
-            <button
-              type="button"
-              onClick={()=> {
-                updateSearchQuery('')
-                searchRef.current.value = '' }
-              }
-              className="ml-2 text-red-500"
-            >
-              Clear
+            <input
+              type="text"
+              placeholder="Search auctions..."
+              ref={searchRef}
+              className="w-full px-2 py-1 focus:outline-none text-gray-700 rounded-full"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => {
+                  updateSearchQuery('');
+                  searchRef.current.value = '';
+                }}
+                className="ml-2 text-red-500"
+              >
+                Clear
+              </button>
+            )}
+            <button type="submit" className="focus:outline-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-indigo-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-4.35-4.35M16.65 16.65A7.5 7.5 0 1117.5 9.5a7.5 7.5 0 01-7.5 7.5"
+                />
+              </svg>
             </button>
-          )}
-          <button type="submit" className="focus:outline-none">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-indigo-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21 21l-4.35-4.35M16.65 16.65A7.5 7.5 0 1117.5 9.5a7.5 7.5 0 01-7.5 7.5"
-              />
-            </svg>
-          </button>
-        </form>
+          </form>
 
           {/* Hamburger menu for mobile */}
           <div className="block lg:hidden">
@@ -98,6 +106,7 @@ const Header = () => {
               className="text-white focus:outline-none"
               aria-label="Toggle menu"
               onClick={toggleSidebar}
+              ref={hamburgerRef}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -136,7 +145,9 @@ const Header = () => {
                 className="text-white hover:text-teal-200 font-semibold focus:outline-none flex items-center min-l min-w-[100px]"
                 onClick={toggleDropdown}
               >
-                {pathname.includes(cetagory) ? <span>{cetagory.charAt(0).toUpperCase() + cetagory.slice(1).toLowerCase()}</span> : <span>Browse</span>}
+                {pathname.includes(cetagory)
+                  ? <span>{cetagory.charAt(0).toUpperCase() + cetagory.slice(1).toLowerCase()}</span>
+                  : <span>Browse</span>}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className={`ml-1 h-4 w-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
@@ -191,7 +202,7 @@ const Header = () => {
 
       {/* Sidebar */}
       {isSidebarOpen && (
-        <div className="fixed top-0 right-0 w-64 h-full bg-indigo-700 shadow-lg z-50 p-4">
+        <div className="fixed top-0 right-0 w-64 h-full bg-indigo-700 shadow-lg z-50 p-4" ref={sidebarRef}>
           <button className="text-white text-2xl mb-4" onClick={toggleSidebar}>
             &times; {/* Close button */}
           </button>
@@ -221,13 +232,23 @@ const Header = () => {
                 </svg>
               </button>
               {isDropdownOpen && (
-                <div className="mt-2 bg-indigo-800 rounded-lg shadow-lg">
+                <div className="mt-2">
                   <ul className="py-2 text-white">
-                    <Link to='/electronics'> <li className="hover:bg-indigo-900 px-4 py-2 cursor-pointer">Electronics</li></Link>
-                    <Link to='/clothing'> <li className="hover:bg-indigo-900 px-4 py-2 cursor-pointer">Clothing</li></Link>
-                    <Link to='/furniture'> <li className="hover:bg-indigo-900 px-4 py-2 cursor-pointer">Furniture</li></Link>
-                    <Link to='/books'> <li className="hover:bg-indigo-900 px-4 py-2 cursor-pointer">Books</li></Link>
-                    <Link to='/other'> <li className="hover:bg-indigo-900 px-4 py-2 cursor-pointer">Other</li></Link>
+                    <Link to={`cetagories/${'electronics'}`}>
+                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Electronics</li>
+                    </Link>
+                    <Link to={`cetagories/${'clothing'}`}>
+                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Clothing</li>
+                    </Link>
+                    <Link to={`cetagories/${'furniture'}`}>
+                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Furniture</li>
+                    </Link>
+                    <Link to={`cetagories/${'books'}`}>
+                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Books</li>
+                    </Link>
+                    <Link to={`cetagories/${'other'}`}>
+                      <li className="hover:bg-indigo-800 px-4 py-2 cursor-pointer">Other</li>
+                    </Link>
                   </ul>
                 </div>
               )}
@@ -236,9 +257,8 @@ const Header = () => {
             <NavLink to="/myitems" onClick={toggleSidebar} className="text-white py-2 hover:text-teal-200">
               My Items
             </NavLink>
-
             <button
-              className="bg-red-500 text-white font-semibold py-2 px-4 rounded-md mt-4 shadow-md hover:shadow-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition-all duration-300"
+              className="bg-red-500 text-white font-semibold py-2 px-4 rounded-md border border-transparent hover:bg-red-600 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition-all duration-300"
               onClick={() => { toggleSidebar(); logout(); }}
             >
               Logout
@@ -251,4 +271,3 @@ const Header = () => {
 };
 
 export default Header;
-
