@@ -203,9 +203,12 @@ const Header = () => {
       {/* Sidebar */}
       {isSidebarOpen && (
         <div className="fixed top-0 right-0 w-64 h-full bg-indigo-700 shadow-lg z-50 p-4" ref={sidebarRef}>
-          <button className="text-white text-2xl mb-4" onClick={toggleSidebar}>
-            &times; {/* Close button */}
-          </button>
+          <div className="text-3xl font-bold">
+            <NavLink to="/" className="flex items-center">
+              <span className="text-white">Auctio</span>
+              <span className="text-teal-300">Nex</span> 
+            </NavLink>
+          </div>
           <nav className="flex flex-col">
             <NavLink to="/" onClick={toggleSidebar} className="text-white py-2 hover:text-teal-200">
               Home
