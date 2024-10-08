@@ -18,6 +18,7 @@ const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Handle sidebar click outside
       if (
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target) &&
@@ -26,16 +27,24 @@ const Header = () => {
       ) {
         setIsSidebarOpen(false);
       }
-
+    
+      // Handle dropdown click outside (regular dropdown)
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target) &&
-        dropdownTriggerRef.current &&
-        !dropdownTriggerRef.current.contains(event.target)
+        !dropdownRef.current.contains(event.target)
       ) {
         setIsDropdownOpen(false);
       }
+    
+      // Handle responsive dropdown (if it's different from the regular one)
+      if (
+        dropdownRefRes.current &&
+        !dropdownRefRes.current.contains(event.target)
+      ) {
+        setIsDropdownResOpen(false);
+      }
     };
+      
 
     document.addEventListener('click', handleClickOutside);
     return () => {

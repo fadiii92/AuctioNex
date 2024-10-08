@@ -11,7 +11,7 @@ function Footer() {
       <div className="text-2xl font-bold text-white">
         <NavLink to="/" className="flex items-center space-x-1">
           <span className="text-white">Auctio</span>
-          <span className="text-teal-300">Nex</span> {/* Accent color */}
+          <span className="text-teal-300">Nex</span>
         </NavLink>
       </div>
   
