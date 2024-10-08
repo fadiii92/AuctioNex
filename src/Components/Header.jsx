@@ -11,13 +11,13 @@ const Header = () => {
   const { pathname } = useLocation();
   const { cetagory } = useParams();
   const dropdownRef = useRef(null);
+  const dropdownRefRes = useRef(null);
   const searchRef = useRef(null);
   const sidebarRef = useRef(null);
   const hamburgerRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Check if click is outside the sidebar and the hamburger button
       if (
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target) &&
@@ -27,7 +27,12 @@ const Header = () => {
         setIsSidebarOpen(false);
       }
 
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        dropdownTriggerRef.current &&
+        !dropdownTriggerRef.current.contains(event.target)
+      ) {
         setIsDropdownOpen(false);
       }
     };
@@ -35,12 +40,21 @@ const Header = () => {
     document.addEventListener('click', handleClickOutside);
     return () => {
       document.removeEventListener('click', handleClickOutside);
+      document.body.classList.remove('overflow-hidden');
+
     };
-  }, [dropdownRef, isSidebarOpen]);
+  }, []);
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+    if (!isSidebarOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
   };
+
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -58,7 +72,7 @@ const Header = () => {
           <div className="text-3xl font-bold">
             <NavLink to="/" className="flex items-center">
               <span className="text-white">Auctio</span>
-              <span className="text-teal-300">Nex</span> 
+              <span className="text-teal-300">Nex</span>
             </NavLink>
           </div>
 
@@ -202,11 +216,11 @@ const Header = () => {
 
       {/* Sidebar */}
       {isSidebarOpen && (
-        <div className="fixed top-0 right-0 w-64 h-full bg-indigo-700 shadow-lg z-50 p-4" ref={sidebarRef}>
+        <div className="fixed top-0 right-0 w-64 h-full bg-indigo-700 shadow-lg z-50 p-4 overflow-y-auto" ref={sidebarRef}>
           <div className="text-3xl font-bold">
             <NavLink to="/" className="flex items-center">
               <span className="text-white">Auctio</span>
-              <span className="text-teal-300">Nex</span> 
+              <span className="text-teal-300">Nex</span>
             </NavLink>
           </div>
           <nav className="flex flex-col">
@@ -218,7 +232,7 @@ const Header = () => {
             </NavLink>
 
             {/* Sidebar dropdown for Browse Auctions */}
-            <div className="relative">
+            <div className="relative" ref={dropdownRefRes}>
               <button
                 className="text-white py-2 hover:text-teal-200 focus:outline-none flex items-center"
                 onClick={toggleDropdown}
