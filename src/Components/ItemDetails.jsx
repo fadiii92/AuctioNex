@@ -177,9 +177,9 @@ function ItemDetails() {
 
               <h3 className="text-lg font-semibold mt-6 mb-4">All Bids</h3>
               <div className="space-y-2">
-                {currentItem?.recendBids &&
-                Object.values(currentItem.recendBids).length > 0 ? (
-                  Object.values(currentItem.recendBids)
+                {currentItem?.recentBids &&
+                Object.values(currentItem.recentBids).length > 0 ? (
+                  Object.values(currentItem.recentBids)
                     .slice(-3)
                     .reverse()
                     .map((item, index) => (
@@ -242,9 +242,9 @@ function ItemDetails() {
               </div>
 
               <div className="space-y-2">
-                {currentItem?.recendBids &&
-                Object.keys(currentItem.recendBids).length > 0 ? (
-                  Object.values(currentItem.recendBids)
+                {currentItem?.recentBids &&
+                Object.keys(currentItem.recentBids).length > 0 ? (
+                  Object.values(currentItem.recentBids)
                     .slice(-3)
                     .reverse()
                     .map((item, index) => (

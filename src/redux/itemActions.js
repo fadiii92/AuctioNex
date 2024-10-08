@@ -34,7 +34,7 @@ export const postItem = async (data) => {
     try {
         const imgUrls =await imgConversion(data.images)
         const updatedData = { ...data, imgUrls }
-        await axios.post(`https://auctionex-62baa-default-rtdb.firebaseio.com/auctionitems/${(data.category).toLowerCase()}.json`, { ...data, imgUrls })
+        await axios.post(`https://auctionex-62baa-default-rtdb.firebaseio.com/auctionitems/${(data.category).toLowerCase()}.json`, { ...data, imgUrls, recentBids:{item:"initial", user:"default", bid:data.startingBid}, })
         console.log('Data added', updatedData)
     }
     catch (error) {
@@ -72,8 +72,8 @@ export const retrieveItems = () => {
 
 export const placeBid = async (bid, item, bidder, cetagory) => {
     try {
-        // await axios.put(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/startingBid.json`, bid)
-        await axios.post(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/recendBids.json`, {item: item, user:bidder, bid:bid})
+        await axios.put(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/startingBid.json`, bid)
+        await axios.post(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/recentBids.json`, {item: item, user:bidder, bid:bid})
         .then(resp=>console.log('Bid Places'))
         .catch(err =>console.log('Somthing went wrong. try agin placing the bid'))
 
