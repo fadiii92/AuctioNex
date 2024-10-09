@@ -113,8 +113,8 @@ function ItemDetails() {
                   alt={`Thumbnail-${index}`}
                   onClick={() => setMainImage(url)}
                   className={`w-16 h-16 object-cover cursor-pointer border-2 rounded-md transition duration-200 ease-in-out transform ${mainImage === url
-                      ? "border-blue-500 scale-110"
-                      : "border-gray-300 hover:border-blue-400"
+                    ? "border-blue-500 scale-110"
+                    : "border-gray-300 hover:border-blue-400"
                     }`}
                 />
               ))}
@@ -138,7 +138,7 @@ function ItemDetails() {
             <div className="flex justify-between items-center mb-8">
               <p className="text-2xl text-gray-800 font-semibold">
                 Current Bid:{" "}
-                <span className="text-blue-600">${currentBid}</span>
+                <span className="text-indigo-600">${currentBid}</span>
               </p>
               <p className="text-sm text-gray-500">
                 Auction ends on:{" "}
@@ -174,7 +174,18 @@ function ItemDetails() {
                 deleteItem={handleDelete}
               />
 
-              <h3 className="text-lg font-semibold mt-6 mb-4">All Bids</h3>
+              <div className="flex justify-between items-center mt-6 mb-4">
+                <h3 className="text-lg font-semibold">Recent Bids</h3>
+                <button
+                  className="px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
+                  onClick={() => {
+                    dispatch(retrieveItems());
+                    setBidPlaceMsg("");
+                  }}
+                >
+                  Reload
+                </button>
+              </div>
               <div className="space-y-2">
                 {currentItem?.recentBids &&
                   Object.values(currentItem.recentBids).length > 0 ? (
@@ -184,15 +195,16 @@ function ItemDetails() {
                     .map((item, index) => (
                       <div
                         key={index}
-                        className="bg-white border border-gray-300 p-3 rounded-md shadow-sm"
+                        className="bg-white border border-gray-300 p-4 rounded-md shadow-md"
                       >
-                        <p className="text-sm text-gray-700">
-                          Bidder: {item.user}
+                        <p className="text-sm text-gray-700 font-semibold">
+                          Bidder: <span className="text-indigo-600">{item.user}</span>
                         </p>
                         <p className="text-sm text-gray-700">
-                          Bid: ${item.bid}
+                          Bid: <span className="font-bold text-teal-600">${item.bid}</span>
                         </p>
                       </div>
+
                     ))
                 ) : (
                   <p className="text-gray-500">No bids have been placed yet.</p>
@@ -249,12 +261,16 @@ function ItemDetails() {
                     .map((item, index) => (
                       <div
                         key={index}
-                        className="bg-gray-100 p-3 rounded-md shadow-md"
+                        className="bg-gray-100 p-3 rounded-md shadow-md transition-transform transform"
                       >
                         <p className="text-sm text-gray-700">
-                          Bid: ${item.bid}
+                          Bid: <span className="font-bold text-indigo-600">${item.bid}</span>
+                          {item.user === currentUser.email && (
+                            <span className="text-green-600 font-semibold ml-2">(You)</span>
+                          )}
                         </p>
                       </div>
+
                     ))
                 ) : (
                   <p className="text-gray-500">No recent bids available.</p>

@@ -357,6 +357,12 @@ const Header = () => {
               className="text-white py-2 hover:text-teal-200"
             >
               My Items
+            </NavLink> 
+            <NavLink
+            to="/results"
+              className="text-white py-2 hover:text-teal-200"
+            >
+              Results
             </NavLink>
             <button
               className="bg-red-500 text-white font-semibold py-2 px-4 rounded-md border border-transparent hover:bg-red-600 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition-all duration-300"
