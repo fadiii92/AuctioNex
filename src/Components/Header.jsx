@@ -239,7 +239,7 @@ const Header = () => {
                   : "text-white hover:text-teal-200 transition-colors"
               }
             >
-              My Items
+              My Listings
             </NavLink>
 
             <NavLink
@@ -356,7 +356,7 @@ const Header = () => {
               onClick={toggleSidebar}
               className="text-white py-2 hover:text-teal-200"
             >
-              My Items
+              My Listings
             </NavLink> 
             <NavLink
             to="/results"

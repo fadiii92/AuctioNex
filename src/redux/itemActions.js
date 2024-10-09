@@ -24,7 +24,7 @@ const imgConversion = async (images) => {
         return imgUrls;
     } catch (error) {
       console.error('Error during image conversion:', error);
-      throw new Error('Image conversion failed'); // Throw error to handle in editItem function
+      throw new Error('Image conversion failed'); 
     }
   };
   
@@ -38,7 +38,7 @@ export const postItem = async (data) => {
         console.log('Data added', updatedData)
     }
     catch (error) {
-        alert('something went wrong', error)
+      throw new Error('Post Item failed'); 
     }
 }
 
@@ -111,6 +111,14 @@ export const editItem = async (item, data) => {
     
     // Log item and data after all operations are complete
     console.log(item, data);
+  }
+
+
+
+  export const handleWinner =async (winner, cetagory)=>{
+    await axios.post(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${winner.item}/winner.json`, winner)
+    .then(resp=>'Winner Decided')
+    .catch(err => 'Some Error Happened'+ err)
   }
 
 
