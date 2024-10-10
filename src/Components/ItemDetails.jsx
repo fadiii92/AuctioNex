@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { retrieveItems, placeBid, deleteItem, handleWinner } from "../redux/itemActions";
 import { AuthContext } from "../context/AuthProvider";
 import ConfirmPopup from "../miniComponents/ConfirmPopup";
+import BidsPopup from "../miniComponents/BidsPopup";
 
 function ItemDetails() {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ function ItemDetails() {
   const [category, setCategory] = useState("");
   const [haveWinner, setHaveWinner] = useState(false);
   const [isModelOpen, setisModelOpen] = useState(false);
+  const [isBidModelOpen, setisBidModelOpen] = useState(false);
   const [formattedDescription, setFormttedDescription] = useState("");
   const { auctionItems } = useSelector((state) => state.auctionDataReducer);
 
@@ -212,11 +214,11 @@ function ItemDetails() {
                 </button>
               </div>
               <div className="space-y-2">
-              {haveWinner && (
-    <span className="text-red-600 font-medium">
-      You declared a winner
-    </span>
-  )}
+                {haveWinner && (
+                  <span className="text-red-600 font-medium">
+                    You declared a winner
+                  </span>
+                )}
                 {currentItem?.recentBids &&
                   Object.values(currentItem.recentBids).length > 0 ? (
                   Object.values(currentItem.recentBids)
@@ -239,6 +241,13 @@ function ItemDetails() {
                 ) : (
                   <p className="text-gray-500">No bids have been placed yet.</p>
                 )}
+                {/* <button onClick={setisBidModelOpen(true)}>Show list of all Bids</button> */}
+                
+                {/* <BidsPopup 
+                open={isBidModelOpen}
+                onClose={()=>setisBidModelOpen(false)}
+                
+                /> */}
               </div>
             </>
           ) : (
@@ -255,8 +264,8 @@ function ItemDetails() {
                 <button
                   onClick={handleBid}
                   className={`px-4 py-2 text-white rounded-lg transition-all duration-200 shadow-md ${haveWinner
-                      ? 'bg-gray-400 cursor-not-allowed' // Styles when disabled
-                      : 'bg-blue-600 hover:bg-blue-700' // Styles when active
+                    ? 'bg-gray-400 cursor-not-allowed' // Styles when disabled
+                    : 'bg-blue-600 hover:bg-blue-700' // Styles when active
                     }`}
                   disabled={haveWinner}
                 >
@@ -288,38 +297,38 @@ function ItemDetails() {
               </div>
 
               <div className="space-y-4">
-  {haveWinner && (
-    <span className="text-red-600 font-medium">
-      Winner Announced: You Can't Bid Anymore
-    </span>
-  )}
+                {haveWinner && (
+                  <span className="text-red-600 font-medium">
+                    Winner Announced: You Can't Bid Anymore
+                  </span>
+                )}
 
-  {currentItem?.recentBids && Object.keys(currentItem.recentBids).length > 0 ? (
-    Object.values(currentItem.recentBids)
-      .slice(-3)
-      .reverse()
-      .map((item, index) => (
-        <div
-          key={index}
-          className="bg-gray-100 p-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
-        >
-          <p className="text-sm text-gray-700">
-            Bid:{" "}
-            <span className="font-bold text-indigo-600">
-              ${item.bid}
-            </span>
-            {item.user === currentUser.email && (
-              <span className="text-green-600 font-semibold ml-2">
-                (You)
-              </span>
-            )}
-          </p>
-        </div>
-      ))
-  ) : (
-    <p className="text-gray-500 italic">No recent bids available.</p>
-  )}
-</div>
+                {currentItem?.recentBids && Object.keys(currentItem.recentBids).length > 0 ? (
+                  Object.values(currentItem.recentBids)
+                    .slice(-3)
+                    .reverse()
+                    .map((item, index) => (
+                      <div
+                        key={index}
+                        className="bg-gray-100 p-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
+                      >
+                        <p className="text-sm text-gray-700">
+                          Bid:{" "}
+                          <span className="font-bold text-indigo-600">
+                            ${item.bid}
+                          </span>
+                          {item.user === currentUser.email && (
+                            <span className="text-green-600 font-semibold ml-2">
+                              (You)
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    ))
+                ) : (
+                  <p className="text-gray-500 italic">No recent bids available.</p>
+                )}
+              </div>
 
             </>
           )}
