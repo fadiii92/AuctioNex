@@ -37,23 +37,30 @@ function ItemDetails() {
 
   useEffect(() => {
     if (currentItem) {
-      setCurrentBid(currentItem.startingBid);
-      setMainImage(currentItem.imgUrls ? currentItem.imgUrls[0] : "");
-      setCategory(currentItem.category);
-
-      if (currentItem?.description.length > 450) {
-        setFormttedDescription(
-          currentItem?.description.slice(0, 400) + "... ..."
-        );
-      } else {
-        setFormttedDescription(currentItem?.description);
+      if (currentBid !== currentItem.startingBid) {
+        setCurrentBid(currentItem.startingBid);
+        setMainImage(currentItem.imgUrls ? currentItem.imgUrls[0] : "");
       }
 
-      if (currentItem.winner)
-        setHaveWinner(true)
+      if (category !== currentItem.category) {
+        setCategory(currentItem.category);
+      }
 
+      const descriptionText =
+        currentItem?.description.length > 450
+          ? currentItem?.description.slice(0, 400) + "... ..."
+          : currentItem?.description;
+
+      if (formattedDescription !== descriptionText) {
+        setFormttedDescription(descriptionText);
+      }
+
+      if (!haveWinner && currentItem.winner) {
+        setHaveWinner(true);
+      }
     }
-  }, [currentItem]);
+  }, [currentItem, currentBid, mainImage, category, formattedDescription, haveWinner]);
+
 
   const handleBid = async () => {
     const bidValue = parseInt(bid);
@@ -241,13 +248,20 @@ function ItemDetails() {
                 ) : (
                   <p className="text-gray-500">No bids have been placed yet.</p>
                 )}
-                {/* <button onClick={setisBidModelOpen(true)}>Show list of all Bids</button> */}
-                
-                {/* <BidsPopup 
-                open={isBidModelOpen}
-                onClose={()=>setisBidModelOpen(false)}
-                
-                /> */}
+                <button
+                  onClick={() => setisBidModelOpen(true)}
+                  className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-200 shadow-md"
+                >
+                  Show list of all Bids
+                </button>
+
+
+                <BidsPopup
+                  open={isBidModelOpen}
+                  onClose={() => setisBidModelOpen(false)}
+                  currentItem={currentItem}
+
+                />
               </div>
             </>
           ) : (
