@@ -59,7 +59,7 @@ function ItemDetails() {
         setHaveWinner(true);
       }
     }
-  }, [currentItem, currentBid, mainImage, category, formattedDescription, haveWinner]);
+  }, [currentItem]);
 
 
   const handleBid = async () => {
@@ -312,10 +312,19 @@ function ItemDetails() {
 
               <div className="space-y-4">
                 {haveWinner && (
-                  <span className="text-red-600 font-medium">
-                    Winner Announced: You Can't Bid Anymore
-                  </span>
+                  <div>
+                    {Object.values(currentItem.winner)[0].user === currentUser.email ? (
+                      <span className="text-red-600 font-medium">
+                        Congratulations! You've won.
+                      </span>
+                    ) : (
+                      <span className="text-red-600 font-medium">
+                        Winner Announced: {Object.values(currentItem.winner)[0].user} has won.
+                      </span>
+                    )}
+                  </div>
                 )}
+
 
                 {currentItem?.recentBids && Object.keys(currentItem.recentBids).length > 0 ? (
                   Object.values(currentItem.recentBids)
@@ -324,7 +333,7 @@ function ItemDetails() {
                     .map((item, index) => (
                       <div
                         key={index}
-                        className="bg-gray-100 p-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
+                        className="bg-gray-100 p-4 rounded-lg shadow-md transition-transform transform"
                       >
                         <p className="text-sm text-gray-700">
                           Bid:{" "}

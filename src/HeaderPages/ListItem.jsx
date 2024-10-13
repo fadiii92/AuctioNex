@@ -67,7 +67,7 @@ const AuctionForm = () => {
         itemOwner: currentUser.uid,
         ...data,
       });
-      navigate("/");
+      navigate("/myitems");
     } else {
       try {
         await editItem(itemId.id, data);
