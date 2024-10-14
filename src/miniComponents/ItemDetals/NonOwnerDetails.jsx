@@ -80,7 +80,7 @@ function NonOwnerDetails({currentItem, itemId, currentBid, setCurrentBid, haveWi
                       </span>
                     ) : (
                       <span className="text-red-600 font-medium">
-                        Winner Announced: {Object.values(currentItem.winner)[0].user} has won.
+                        Winner Announced Better Luck Next time.
                       </span>
                     )}
                   </div>
