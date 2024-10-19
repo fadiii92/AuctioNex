@@ -1,10 +1,11 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { retrieveItems } from "../redux/itemActions";
 import ImageContainer from "../miniComponents/ItemDetals/ImageContainer";
 import OwnerItemDetails from "../miniComponents/ItemDetals/OwnerItemDetails";
 import NonOwnerDetails from "../miniComponents/ItemDetals/NonOwnerDetails";
+import ChatWithOwnerButton from "../miniComponents/ItemDetals/ChatWithOwnerButton";
 
 function ItemDetails() {
   const dispatch = useDispatch();
@@ -70,10 +71,10 @@ function ItemDetails() {
     <div className="container mx-auto py-10">
       <div className="flex flex-col lg:flex-row items-stretch h-full">
         {/* Main Image Section */}
-        <ImageContainer 
-          mainImage = {mainImage}
+        <ImageContainer
+          mainImage={mainImage}
           currentItem={currentItem}
-          setMainImage = {setMainImage}
+          setMainImage={setMainImage}
         />
 
         {/* Item Details Section */}
@@ -103,22 +104,24 @@ function ItemDetails() {
 
           {/* Conditional Rendering Based on Pathname */}
           {pathname.includes("myItems") ? (
-           <OwnerItemDetails 
-            currentItem={currentItem}
-            haveWinner={haveWinner}
-            setHaveWinner={setHaveWinner}
-            itemId={itemId}   
-           />
+            <OwnerItemDetails
+              currentItem={currentItem}
+              haveWinner={haveWinner}
+              setHaveWinner={setHaveWinner}
+              itemId={itemId}
+            />
           ) : (
-            <NonOwnerDetails 
+            <NonOwnerDetails
               currentItem={currentItem}
               itemId={itemId}
-              currentBid = {currentBid}
-              setCurrentBid = {setCurrentBid}
+              currentBid={currentBid}
+              setCurrentBid={setCurrentBid}
               haveWinner={haveWinner}
-            
+
             />
-                      )}
+          )}
+          {haveWinner && <ChatWithOwnerButton
+            path={pathname} />}
         </div>
       </div>
       {formattedDescription.length > 300 && (
@@ -131,7 +134,10 @@ function ItemDetails() {
           </p>
         </div>
       )}
+
     </div>
+
+
   );
 }
 
