@@ -5,7 +5,6 @@ import { retrieveItems } from "../redux/itemActions";
 import ImageContainer from "../miniComponents/ItemDetals/ImageContainer";
 import OwnerItemDetails from "../miniComponents/ItemDetals/OwnerItemDetails";
 import NonOwnerDetails from "../miniComponents/ItemDetals/NonOwnerDetails";
-import ChatWithOwnerButton from "../miniComponents/ItemDetals/ChatWithOwnerButton";
 
 function ItemDetails() {
   const dispatch = useDispatch();
@@ -120,8 +119,6 @@ function ItemDetails() {
 
             />
           )}
-          {haveWinner && <ChatWithOwnerButton
-            path={pathname} />}
         </div>
       </div>
       {formattedDescription.length > 300 && (
