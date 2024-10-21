@@ -18,7 +18,7 @@ function NonOwnerDetails({currentItem, itemId, currentBid, setCurrentBid, haveWi
           setBid("");
           setBidError("");
           setBidPlaceMsg("Bid Placed successfully");
-          await placeBid(bidValue, itemId, currentUser.email, currentItem.category);
+          await placeBid(bidValue, itemId, currentUser.email, currentItem.category, currentItem.itemOwner);
         } else {
           setBidError("Your bid must be higher than the current bid.");
           setBidPlaceMsg("");

@@ -26,7 +26,7 @@ function MyItems() {
     <ParentCard className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
       {Object.values(allItems).map((category) => 
         category
-          .filter((item) => item.itemOwner === currentUser.uid)
+          .filter((item) => item.itemOwner === currentUser.email)
           .map((item) => (
             <Link key={item.key} to={`/myItems/${item.key}`} className="block hover:bg-gray-100 transition-colors duration-200 p-2 rounded-lg">
               <AuctionCard

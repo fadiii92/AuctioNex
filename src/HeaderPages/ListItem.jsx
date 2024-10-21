@@ -64,7 +64,7 @@ const AuctionForm = () => {
   const onSubmit = async (data) => {
     if (pathname.includes("listitem")) {
       await postItem({
-        itemOwner: currentUser.uid,
+        itemOwner: currentUser.email,
         ...data,
       });
       navigate("/myitems");

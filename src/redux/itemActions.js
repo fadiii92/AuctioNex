@@ -70,10 +70,10 @@ export const retrieveItems = () => {
 
 }
 
-export const placeBid = async (bid, item, bidder, cetagory) => {
+export const placeBid = async (bid, item, bidder, cetagory, itemOwner) => {
     try {
         await axios.put(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/startingBid.json`, bid)
-        await axios.post(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/recentBids.json`, {item: item, user:bidder, bid:bid})
+        await axios.post(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/recentBids.json`, {item: item, user:bidder, bid:bid, owner:itemOwner})
         .then(resp=>console.log('Bid Places'))
         .catch(err =>console.log('Somthing went wrong. try agin placing the bid'))
 

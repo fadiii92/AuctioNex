@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { retrieveItems } from "../redux/itemActions";
 import ImageContainer from "../miniComponents/ItemDetals/ImageContainer";
 import OwnerItemDetails from "../miniComponents/ItemDetals/OwnerItemDetails";
 import NonOwnerDetails from "../miniComponents/ItemDetals/NonOwnerDetails";
+import ChatWithOwnerButton from "../miniComponents/ItemDetals/ChatWithOwnerButton";
+import Chat from '../chat/Chat'
+import { AuthContext } from "../context/AuthProvider";
 
 function ItemDetails() {
   const dispatch = useDispatch();
   const { itemId } = useParams();
+  const { currentUser } = useContext(AuthContext);
   const { pathname } = useLocation();
   const [loading, setLoading] = useState(true);
   const [mainImage, setMainImage] = useState("");
@@ -16,6 +20,7 @@ function ItemDetails() {
   const [haveWinner, setHaveWinner] = useState(false);
   const [formattedDescription, setFormttedDescription] = useState("");
   const { auctionItems } = useSelector((state) => state.auctionDataReducer);
+  const [showChat, setShowChat] = useState(false);
 
   const currentItem = Object.values(auctionItems)
     .flatMap((category) => category)
@@ -117,6 +122,20 @@ function ItemDetails() {
               setCurrentBid={setCurrentBid}
               haveWinner={haveWinner}
 
+            />
+          )}
+          {haveWinner && (Object.values(currentItem.winner)[0].user === currentUser.email || Object.values(currentItem.winner)[0].owner === currentUser.email) && <ChatWithOwnerButton
+            path={pathname}
+            onClick={() => setShowChat(true)}
+          />}
+
+          {showChat && (
+            <Chat 
+            itemId={itemId}
+            currentUserId={currentUser.email}
+            onClose={()=>setShowChat(false)}
+            category={currentItem.category}
+            
             />
           )}
         </div>
