@@ -1,9 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
-import { auth } from '../firebaseConfig'; 
+import { auth } from '../../firebaseConfig'; 
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthProvider';
 import { Link } from 'react-router-dom';
 
 const Login = () => {

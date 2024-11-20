@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { retrieveItems } from "../redux/itemActions";
-import ImageContainer from "../Components/ItemDetals/ImageContainer";
-import OwnerItemDetails from "../Components/ItemDetals/OwnerItemDetails";
-import NonOwnerDetails from "../Components/ItemDetals/NonOwnerDetails";
-import ChatWithOwnerButton from "../Components/ItemDetals/ChatWithOwnerButton";
-import Chat from '../Components/chat/Chat'
-import { AuthContext } from "../context/AuthProvider";
+import { retrieveItems } from "../../redux/itemActions";
+import ImageContainer from "../../Components/ItemDetals/ImageContainer";
+import OwnerItemDetails from "../../Components/ItemDetals/OwnerItemDetails";
+import NonOwnerDetails from "../../Components/ItemDetals/NonOwnerDetails";
+import ChatWithOwnerButton from "../../Components/ItemDetals/ChatWithOwnerButton";
+import Chat from '../../Components/chat/Chat'
+import { AuthContext } from "../../context/AuthProvider";
 
 function ItemDetails() {
   const dispatch = useDispatch();
@@ -17,10 +17,10 @@ function ItemDetails() {
   const [loading, setLoading] = useState(true);
   const [mainImage, setMainImage] = useState("");
   const [currentBid, setCurrentBid] = useState(0);
-  const [haveWinner, setHaveWinner] = useState(false);
   const [formattedDescription, setFormttedDescription] = useState("");
   const { auctionItems } = useSelector((state) => state.auctionDataReducer);
   const [showChat, setShowChat] = useState(false);
+  const [haveWinner, setHaveWinner] = useState(false);
 
   const currentItem = Object.values(auctionItems)
     .flatMap((category) => category)
@@ -31,6 +31,7 @@ function ItemDetails() {
       setLoading(false);
     });
   }, [dispatch]);
+
 
   useEffect(() => {
     if (currentItem) {
@@ -48,7 +49,7 @@ function ItemDetails() {
         setFormttedDescription(descriptionText);
       }
 
-      if (!haveWinner && currentItem.winner) {
+      if (!haveWinner && currentItem?.winner) {
         setHaveWinner(true);
       }
     }
@@ -124,18 +125,21 @@ function ItemDetails() {
 
             />
           )}
-          {haveWinner && (Object.values(currentItem.winner)[0].user === currentUser.email || Object.values(currentItem.winner)[0].owner === currentUser.email) && <ChatWithOwnerButton
-            path={pathname}
-            onClick={() => setShowChat(true)}
-          />}
+          {haveWinner && currentItem?.winner &&
+            (Object?.values(currentItem?.winner)[0]?.user === currentUser?.email ||
+              Object?.values(currentItem?.winner)[0]?.owner === currentUser?.email) &&
+            <ChatWithOwnerButton
+              path={pathname}
+              onClick={() => setShowChat(true)}
+            />}
 
           {showChat && (
-            <Chat 
-            itemId={itemId}
-            currentUserId={currentUser.email}
-            onClose={()=>setShowChat(false)}
-            category={currentItem.category}
-            
+            <Chat
+              itemId={itemId}
+              currentUserId={currentUser.email}
+              onClose={() => setShowChat(false)}
+              category={currentItem.category}
+
             />
           )}
         </div>

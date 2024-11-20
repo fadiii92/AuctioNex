@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
-import ConfirmPopup from "../ConfirmPopup";
-import BidsPopup from "../BidsPopup";
+import ConfirmPopup from "../../Portals/ConfirmPopup";
+import BidsPopup from "../../Portals/BidsPopup";
 import { useNavigate } from 'react-router-dom';
 import { deleteItem, handleWinner, retrieveItems } from '../../redux/itemActions';
 import { useDispatch } from 'react-redux';
+import Spinner from '../utils/Spinner';
 
 function OwnerItemDetails({ currentItem, itemId, haveWinner, setHaveWinner }) {
   const [isModelOpen, setisModelOpen] = useState(false);
   const [isBidModelOpen, setisBidModelOpen] = useState(false);
+  const [errormsg, setErrorMsg] = useState('')
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [endAuctLoading, setendAuctLaoding] = useState(false)
 
 
   const handleDelete = async () => {
@@ -17,8 +20,9 @@ function OwnerItemDetails({ currentItem, itemId, haveWinner, setHaveWinner }) {
       await deleteItem(itemId, currentItem.category);
       navigate("/myitems");
       alert("Deleted Successfully");
+      setErrorMsg('')
     } catch (err) {
-      alert("Something went wrong. Could not delete");
+      setErrorMsg(err)
     }
   };
 
@@ -26,12 +30,14 @@ function OwnerItemDetails({ currentItem, itemId, haveWinner, setHaveWinner }) {
     try {
       //getting last user beacuse last object contain highest bid
       const winner = (Object.values(currentItem.recentBids).slice(-1))[0]
-      await handleWinner(winner, currentItem.category)
+      setendAuctLaoding(true)
+      await handleWinner(winner, currentItem.category).then(res=>setendAuctLaoding(false))
       setHaveWinner(true)
       console.log(winner, " is the winner")
+      setErrorMsg('')
     }
     catch (error) {
-      console.log('error error eroor auction not ended', error)
+      setErrorMsg(error)
     }
   }
 
@@ -60,9 +66,9 @@ function OwnerItemDetails({ currentItem, itemId, haveWinner, setHaveWinner }) {
           onClick={endAuctionHandler}
           className={`px-4 py-2 text-white rounded-lg transition-all duration-200 shadow-md ${currentItem.winner ? 'bg-gray-400' : 'bg-red-600 hover:bg-red-700'
             }`}
-          disabled={!!currentItem.winner}
+          disabled={!!currentItem?.winner}
         >
-          End Auction
+          {endAuctLoading ? <Spinner /> : 'End Auction'} 
         </button>
 
       </div>
@@ -127,6 +133,9 @@ function OwnerItemDetails({ currentItem, itemId, haveWinner, setHaveWinner }) {
 
         />
       </div>
+      {errormsg && (
+                <p className="text-red-500 text-sm mt-2">{errormsg}</p>
+              )}
     </>
   )
 }

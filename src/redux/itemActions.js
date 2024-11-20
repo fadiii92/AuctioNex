@@ -47,7 +47,7 @@ export const retrieveItems = () => {
         let allItems
         await axios.get(`${baseurl}/auctionitems.json`)
             .then(resp => allItems = resp.data)
-            .catch(err => console.log(err))
+            .catch(err => {throw new Error("Could not retrieve items")})
 
         //    console.log(allItems)
         let formateditems = {}
@@ -71,24 +71,19 @@ export const retrieveItems = () => {
 }
 
 export const placeBid = async (bid, item, bidder, cetagory, itemOwner) => {
-    try {
         await axios.put(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/startingBid.json`, bid)
         await axios.post(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/recentBids.json`, {item: item, user:bidder, bid:bid, owner:itemOwner})
         .then(resp=>console.log('Bid Places'))
-        .catch(err =>console.log('Somthing went wrong. try agin placing the bid'))
+        .catch(err =>{throw new Error("Could not place Bid, Some thing went wrong")})
 
 
-    }
-    catch (err) {
-        alert('something went wrong', err)
-    }
 }
 
 export const deleteItem =async (id, cetagory) =>{
     console.log(id, cetagory)
     await axios.delete(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${id}.json`)
     .then(resp=> console.log('deleted'))
-    .catch(err => console.log('could not deleet', err))
+    .catch(err => {throw new Error("Could not delete item")})
 }
 
 
@@ -106,7 +101,7 @@ export const editItem = async (item, data) => {
       
       console.log('Item edited successfully');
     } catch (err) {
-      console.log('Error editing item', err);
+      throw new Error("Could not edit item, something went wrong")
     }
     
     // Log item and data after all operations are complete
@@ -118,22 +113,9 @@ export const editItem = async (item, data) => {
   export const handleWinner =async (winner, cetagory)=>{
     await axios.post(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${winner.item}/winner.json`, winner)
     .then(resp=>'Winner Decided')
-    .catch(err => 'Some Error Happened'+ err)
+  .catch(err => {throw new Error("Something went wrong, Could not announce winner")})
   }
 
 
-// export const retriveRecentBids = (item, cetagory)=>{
-//     return async (dispatch) => {
-//         let allBids, formatedBidsData = []
-//         await axios.get(`${baseurl}/auctionitems/${cetagory.toLowerCase()}/${item}/recendBids.json`)
-//         .then(resp => allBids = resp.data)
-//         .catch(err=>alert('Something went wrong while getting Bids'))
-//         // console.log(allBids) 
-        
-//         Object.values(allBids).map(item=> formatedBidsData.push(item))
-//         dispatch(auctionActions.setBids(formatedBidsData))
-        
-//     }
-// }
 
 

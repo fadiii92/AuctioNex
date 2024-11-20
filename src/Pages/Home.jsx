@@ -1,11 +1,12 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { retrieveItems } from "../redux/itemActions";
-import ParentCard from "../Components/ParentCard";
-import AuctionCard from "../Components/AuctionCard";
+import ParentCard from "../Components/item/ParentCard";
+import AuctionCard from "../Components/item/AuctionCard";
 import { Link, useLocation, useParams } from "react-router-dom";
 import useSearch from "../context/searchContext";
+import Loading from "../Components/utils/Loading";
 
 function Home() {
   const { currentUser } = useContext(AuthContext);
@@ -13,10 +14,12 @@ function Home() {
   const { pathname } = useLocation();
   const { cetagory } = useParams();
   const { searchQuery } = useSearch();
+  const [loading, setloading] = useState(false)
 
   useEffect(() => {
-    dispatch(retrieveItems());
-  }, [dispatch]);
+    setloading(true)
+    dispatch(retrieveItems()).finally(() => setloading(false));  }
+    ,[dispatch]);
 
   const ItemsInStore = useSelector((state) => state.auctionDataReducer.auctionItems);
 
@@ -29,6 +32,12 @@ function Home() {
     : ItemsInStore;
 
     // console.log(allItems)
+
+    if (loading) {
+      return (
+       <Loading />
+      );
+    }
 
   return (
     <>

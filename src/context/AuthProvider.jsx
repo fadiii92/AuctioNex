@@ -2,6 +2,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import React, { useEffect, useState } from 'react'
 import { auth } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
+import Loading from '../Components/utils/Loading';
 
 
 function AuthProvider({children}) {
@@ -36,9 +37,7 @@ function AuthProvider({children}) {
 
     if (loading) {
       return (
-        <div className="flex justify-center items-center h-screen bg-gray-100">
-          <p className="text-lg font-semibold text-gray-600">Loading...</p>
-        </div>
+       <Loading />
       );
     }
 
