@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { getMessages, sendMessage } from '../redux/chats';
+import { getMessages, sendMessage } from '../../redux/chats';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Chat = ({ itemId, currentUserId, onClose, category }) => {
@@ -10,7 +10,7 @@ const Chat = ({ itemId, currentUserId, onClose, category }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       dispatch(getMessages(itemId, category));
-    }, 3000);
+    }, 2000);
   
     return () => clearInterval(interval);
   }, [dispatch, itemId, category]);

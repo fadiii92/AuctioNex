@@ -1,11 +1,11 @@
 import React, { useContext, useEffect } from 'react'
-import { AuthContext } from '../context/AuthProvider';
-import ParentCard from '../miniComponents/ParentCard';
-import AuctionCard from '../miniComponents/AuctionCard';
+import { AuthContext } from "../../context/AuthProvider";
+import ParentCard from '../../Components/ParentCard';
+import AuctionCard from '../../Components/AuctionCard';
 import { useSelector, useDispatch } from 'react-redux';
-import { retrieveItems } from "../redux/itemActions"
+import { retrieveItems } from "../../redux/itemActions"
 import { Link } from 'react-router-dom';
-import useSearch from '../context/searchContext';
+import useSearch from '../../context/searchContext';
 
 
 function MyItems() {

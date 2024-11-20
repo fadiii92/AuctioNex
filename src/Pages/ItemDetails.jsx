@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { retrieveItems } from "../redux/itemActions";
-import ImageContainer from "../miniComponents/ItemDetals/ImageContainer";
-import OwnerItemDetails from "../miniComponents/ItemDetals/OwnerItemDetails";
-import NonOwnerDetails from "../miniComponents/ItemDetals/NonOwnerDetails";
-import ChatWithOwnerButton from "../miniComponents/ItemDetals/ChatWithOwnerButton";
-import Chat from '../chat/Chat'
+import ImageContainer from "../Components/ItemDetals/ImageContainer";
+import OwnerItemDetails from "../Components/ItemDetals/OwnerItemDetails";
+import NonOwnerDetails from "../Components/ItemDetals/NonOwnerDetails";
+import ChatWithOwnerButton from "../Components/ItemDetals/ChatWithOwnerButton";
+import Chat from '../Components/chat/Chat'
 import { AuthContext } from "../context/AuthProvider";
 
 function ItemDetails() {

@@ -2,8 +2,8 @@ import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { retrieveItems } from "../redux/itemActions";
-import ParentCard from "../miniComponents/ParentCard";
-import AuctionCard from "../miniComponents/AuctionCard";
+import ParentCard from "../Components/ParentCard";
+import AuctionCard from "../Components/AuctionCard";
 import { Link, useLocation, useParams } from "react-router-dom";
 import useSearch from "../context/searchContext";
 

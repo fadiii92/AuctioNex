@@ -1,5 +1,5 @@
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
-import { Login, Signup, Home, MyItems, ListItems, NotFoundPage, ItemDetails, FooterPages, Results } from './Components'
+import { Login, Signup, Home, MyItems, ListItems, NotFoundPage, ItemDetails, FooterPages, Results } from './Pages'
 import { SearchProvider } from './context/searchContext'
 import PrivateRoute from './context/PrivateRoute'
 import { Provider } from 'react-redux'
