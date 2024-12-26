@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { getMessages, sendMessage } from '../../redux/chats';
+import { getMessages, sendMessage } from '../../redux/chatActions';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Chat = ({ itemId, currentUserId, onClose, category }) => {
